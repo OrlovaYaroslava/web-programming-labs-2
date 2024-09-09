@@ -16,6 +16,7 @@ def web():
                    <li><a href="/lab1/oak">Страница с дубом</a></li>
                    <li><a href="/lab1/counter">Счётчик посещений</a></li>
                    <li><a href="/info">Перенаправление на автора (Info)</a></li>
+                   <li><a href="/create">Код ответа 201 (Create)</a></li>
                </ul>
            </body> 
         </html>"""
@@ -68,5 +69,19 @@ def counter():
 # Роут для перенаправления
 @app.route("/info")
 def info():
-    return redirect('/author')  # Перенаправление на страницу "author"
+    return redirect(url_for('author'))  # Перенаправление на страницу "author"
+
+# Роут, который возвращает код 201 "Created"
+@app.route("/create")
+def create():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>Ресурс был создан!</h1>
+            <p>Этот ответ возвращает код 201 (Created).</p>
+            <a href="/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 201  # Указываем код ответа 201
 
