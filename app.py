@@ -1,5 +1,9 @@
 from flask import Flask, url_for
+
 app = Flask(__name__)
+
+# Глобальная переменная для счётчика посещений
+count = 0
 
 @app.route("/web")
 def web():
@@ -7,24 +11,28 @@ def web():
         <html>
            <body> 
                <h1>web-сервер на flask</h1>
-               <a href="/author">author</a> 
-           <body> 
+               <ul>
+                   <li><a href="/author">Автор</a></li>
+                   <li><a href="/lab1/oak">Страница с дубом</a></li>
+                   <li><a href="/lab1/counter">Счётчик посещений</a></li>
+               </ul>
+           </body> 
         </html>"""
 
 @app.route("/author")
 def author():
-   name="Орлова Ярослава Владиславовна"
-   group="ФБИ-22"
-   faculty="ФБ"
-   
-   return """<!doctype html> 
+    name = "Орлова Ярослава Владиславовна"
+    group = "ФБИ-22"
+    faculty = "ФБ"
+    
+    return """<!doctype html> 
         <html>
            <body> 
-               <p>Судент: """ +name+ """</p>
-               <p>Группа: """ +group+ """</p>
-               <p>Факультет: """ +faculty+ """</p>
-               <a href="/web">web</a> 
-           <body> 
+               <p>Судент: """ + name + """</p>
+               <p>Группа: """ + group + """</p>
+               <p>Факультет: """ + faculty + """</p>
+               <a href="/web">Вернуться на главную</a> 
+           </body> 
         </html>"""
 
 @app.route("/lab1/oak") 
@@ -36,5 +44,23 @@ def oak():
     <body> 
         <h1>Дуб</h1> 
         <img src="''' + path + '''"> 
+        <a href="/web">Вернуться на главную</a> 
     </body> 
 </html>'''    
+
+# Роут для счётчика
+@app.route("/lab1/counter")
+def counter():
+    global count  # Указание, что переменная глобальная
+    count += 1
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>Счётчик посещений</h1>
+            <p>Эта страница была посещена """ + str(count) + """ раз(а).</p>
+            <a href="/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """
+
