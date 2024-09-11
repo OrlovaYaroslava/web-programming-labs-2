@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, make_response
 
 app = Flask(__name__)
 
@@ -17,6 +17,7 @@ def web():
                    <li><a href="/lab1/counter">Счётчик посещений</a></li>
                    <li><a href="/info">Перенаправление на автора (Info)</a></li>
                    <li><a href="/create">Код ответа 201 (Create)</a></li>
+                   <li><a href="/response_headers">HTTP заголовки</a></li>
                </ul>
            </body> 
         </html>"""
@@ -112,4 +113,19 @@ def internal_server_error(e):
         </body>
     </html>
     """, 500
+
+# Роут для демонстрации HTTP заголовков
+@app.route("/response_headers")
+def response_headers():
+    return """<!doctype html> 
+        <html>
+           <body> 
+               <h1>Заголовки ответа HTTP</h1>
+               <a href="/web">Вернуться на главную</a>
+           </body> 
+        </html>""", 200, {
+        'X-Server': 'sample',
+        'Content-Type': 'text/plain; charset=utf-8'
+    }
+
 
