@@ -1,9 +1,70 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for
 
 app = Flask(__name__)
 
 # Глобальная переменная для счётчика посещений
 count = 0
+
+from flask import Flask, url_for, redirect, make_response
+
+app = Flask(__name__)
+
+# Главная страница по маршрутам / и /index
+@app.route("/")
+@app.route("/index")
+def index():
+    return """
+    <!doctype html>
+    <html>
+        <head>
+            <title>НГТУ, ФБ, Лабораторные работы</title>
+            <style>
+                body {
+                    display: flex;
+                    flex-direction: column;
+                    min-height: 100vh;
+                    margin: 0;
+                }
+                header {
+                    background-color: #f8f8f8;
+                    padding: 20px;
+                    text-align: center;
+                }
+                footer {
+                    background-color: #f8f8f8;
+                    padding: 10px;
+                    text-align: center;
+                    margin-top: auto; /* Это свойство прижимает футер к низу */
+                }
+                nav {
+                    padding: 20px;
+                }
+                nav ul {
+                    list-style-type: none;
+                    padding: 0;
+                }
+                nav ul li {
+                    display: inline;
+                    margin-right: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <header>
+                <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+            </header>
+            <nav>
+                <ul>
+                    <li><a href="/lab1/web">Первая лабораторная</a></li>
+                </ul>
+            </nav>
+            <footer>
+                <p>Студент: Орлова Ярослава Владиславовна</p>
+                <p>Группа: ФБИ-22, Курс: 2, 2024</p>
+            </footer>
+        </body>
+    </html>
+    """
 
 # Обновлённый маршрут /lab1/web
 @app.route("/lab1/web")
