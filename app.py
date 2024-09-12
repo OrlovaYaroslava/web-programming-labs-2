@@ -55,10 +55,9 @@ def oak():
     </body> 
 </html>'''    
 
-# Роут для счётчика
 @app.route("/lab1/counter")
 def counter():
-    global count  # Указание, что переменная глобальная
+    global count
     count += 1
     return """
     <!doctype html>
@@ -66,10 +65,27 @@ def counter():
         <body>
             <h1>Счётчик посещений</h1>
             <p>Эта страница была посещена """ + str(count) + """ раз(а).</p>
+            <a href="/lab1/reset_counter">Очистить счётчик</a><br>
             <a href="/web">Вернуться на главную</a>
         </body>
     </html>
     """
+
+# Роут для очистки счётчика
+@app.route("/lab1/reset_counter")
+def reset_counter():
+    global count
+    count = 0  # Сбрасываем счётчик в 0
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>Счётчик был очищен!</h1>
+            <a href="/lab1/counter">Вернуться на страницу счётчика</a>
+        </body>
+    </html>
+    """
+
 
 # Роут для перенаправления
 @app.route("/info")
