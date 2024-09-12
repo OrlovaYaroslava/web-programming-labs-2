@@ -1,13 +1,9 @@
-from flask import Flask, url_for
+from flask import Flask, url_for, redirect
 
 app = Flask(__name__)
 
 # Глобальная переменная для счётчика посещений
 count = 0
-
-from flask import Flask, url_for, redirect, make_response
-
-app = Flask(__name__)
 
 # Главная страница по маршрутам / и /index
 @app.route("/")
@@ -55,7 +51,7 @@ def index():
             </header>
             <nav>
                 <ul>
-                    <li><a href="/lab1/web">Первая лабораторная</a></li>
+                    <li><a href="/lab1">Первая лабораторная</a></li>
                 </ul>
             </nav>
             <footer>
@@ -211,3 +207,23 @@ def response_headers():
         'X-Server': 'sample',
         'Content-Type': 'text/plain; charset=utf-8'
     }
+
+# Новый маршрут /lab1
+@app.route("/lab1")
+def lab1():
+    return """
+    <!doctype html>
+    <html>
+        <head>
+            <title>Лабораторная 1</title>
+        </head>
+        <body>
+            <h1>Лабораторная 1</h1>
+            <p>Flask — фреймворк для создания веб-приложений на языке программирования Python, использующий набор инструментов Werkzeug, 
+            а также шаблонизатор Jinja2. Относится к категории так называемых микрофреймворков — минималистичных каркасов веб-приложений, 
+            сознательно предоставляющих лишь самые базовые возможности.</p>
+            <ul><a href="/lab1/web">Задания первой лабораторной</a></ul>
+            <a href="/">Вернуться на главную</a>
+        </body>
+    </html>
+    """
