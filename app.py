@@ -1,28 +1,30 @@
-from flask import Flask, url_for, redirect, make_response
+from flask import Flask, url_for, redirect
 
 app = Flask(__name__)
 
 # Глобальная переменная для счётчика посещений
 count = 0
 
-@app.route("/web")
+# Обновлённый маршрут /lab1/web
+@app.route("/lab1/web")
 def web():
     return """<!doctype html> 
         <html>
            <body> 
                <h1>web-сервер на flask</h1>
                <ul>
-                   <li><a href="/author">Автор</a></li>
+                   <li><a href="/lab1/author">Автор</a></li>
                    <li><a href="/lab1/oak">Страница с дубом</a></li>
                    <li><a href="/lab1/counter">Счётчик посещений</a></li>
-                   <li><a href="/info">Перенаправление на автора (Info)</a></li>
-                   <li><a href="/create">Код ответа 201 (Create)</a></li>
-                   <li><a href="/response_headers">HTTP заголовки</a></li>
+                   <li><a href="/lab1/info">Перенаправление на автора (Info)</a></li>
+                   <li><a href="/lab1/create">Код ответа 201 (Create)</a></li>
+                   <li><a href="/lab1/response_headers">HTTP заголовки</a></li>
                </ul>
            </body> 
         </html>"""
 
-@app.route("/author")
+# Обновлённый маршрут /lab1/author
+@app.route("/lab1/author")
 def author():
     name = "Орлова Ярослава Владиславовна"
     group = "ФБИ-22"
@@ -34,10 +36,11 @@ def author():
                <p>Судент: """ + name + """</p>
                <p>Группа: """ + group + """</p>
                <p>Факультет: """ + faculty + """</p>
-               <a href="/web">Вернуться на главную</a> 
+               <a href="/lab1/web">Вернуться на главную</a> 
            </body> 
         </html>"""
 
+# Страница с дубом и подключение CSS
 @app.route("/lab1/oak") 
 def oak(): 
     image_path = url_for("static", filename="oak.jpg")
@@ -51,10 +54,11 @@ def oak():
     <body> 
         <h1>Дуб</h1> 
         <img src="''' + image_path + '''"> 
-        <a href="/web">Вернуться на главную</a> 
+        <a href="/lab1/web">Вернуться на главную</a> 
     </body> 
 </html>'''    
 
+# Счётчик посещений
 @app.route("/lab1/counter")
 def counter():
     global count
@@ -66,12 +70,12 @@ def counter():
             <h1>Счётчик посещений</h1>
             <p>Эта страница была посещена """ + str(count) + """ раз(а).</p>
             <a href="/lab1/reset_counter">Очистить счётчик</a><br>
-            <a href="/web">Вернуться на главную</a>
+            <a href="/lab1/web">Вернуться на главную</a>
         </body>
     </html>
     """
 
-# Роут для очистки счётчика
+# Очистка счётчика
 @app.route("/lab1/reset_counter")
 def reset_counter():
     global count
@@ -86,14 +90,13 @@ def reset_counter():
     </html>
     """
 
-
-# Роут для перенаправления
-@app.route("/info")
+# Обновлённый маршрут /lab1/info
+@app.route("/lab1/info")
 def info():
-    return redirect(url_for('author'))  # Перенаправление на страницу "author"
+    return redirect(url_for('author'))  # Перенаправление на страницу /lab1/author
 
-# Роут, который возвращает код 201 "Created"
-@app.route("/create")
+# Код 201 "Created"
+@app.route("/lab1/create")
 def create():
     return """
     <!doctype html>
@@ -101,12 +104,12 @@ def create():
         <body>
             <h1>Ресурс был создан!</h1>
             <p>Этот ответ возвращает код 201 (Created).</p>
-            <a href="/web">Вернуться на главную</a>
+            <a href="/lab1/web">Вернуться на главную</a>
         </body>
     </html>
     """, 201  # Указываем код ответа 201
 
-# Обработчик ошибки 404 (страница не найдена)
+# Обработчик ошибки 404
 @app.errorhandler(404)
 def page_not_found(e):
     return """
@@ -115,12 +118,12 @@ def page_not_found(e):
         <body>
             <h1>404: Страница не найдена</h1>
             <p>К сожалению, страница, которую вы ищете, не существует.</p>
-            <a href="/web">Вернуться на главную</a>
+            <a href="/lab1/web">Вернуться на главную</a>
         </body>
     </html>
     """, 404
 
-# Обработчик ошибки 500 (внутренняя ошибка сервера)
+# Обработчик ошибки 500
 @app.errorhandler(500)
 def internal_server_error(e):
     return """
@@ -129,23 +132,21 @@ def internal_server_error(e):
         <body>
             <h1>500: Внутренняя ошибка сервера</h1>
             <p>Произошла внутренняя ошибка на сервере. Мы уже работаем над её устранением.</p>
-            <a href="/web">Вернуться на главную</a>
+            <a href="/lab1/web">Вернуться на главную</a>
         </body>
     </html>
     """, 500
 
-# Роут для демонстрации HTTP заголовков
-@app.route("/response_headers")
+# HTTP заголовки
+@app.route("/lab1/response_headers")
 def response_headers():
     return """<!doctype html> 
         <html>
            <body> 
                <h1>Заголовки ответа HTTP</h1>
-               <a href="/web">Вернуться на главную</a>
+               <a href="/lab1/web">Вернуться на главную</a>
            </body> 
         </html>""", 200, {
         'X-Server': 'sample',
         'Content-Type': 'text/plain; charset=utf-8'
     }
-
-
