@@ -166,19 +166,61 @@ def create():
     </html>
     """, 201  # Указываем код ответа 201
 
-# Обработчик ошибки 404
+# Обработчик ошибки 404 с добавленными стилями и изображением
 @app.errorhandler(404)
 def page_not_found(e):
+    image_path = url_for("static", filename="404_image.jpg")  # Предположим, что у тебя есть изображение "404_image.jpg" в папке static
     return """
     <!doctype html>
     <html>
+        <head>
+            <title>Страница не найдена</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    color: #333;
+                    background-color: #f4f4f9;
+                    margin: 0;
+                    padding: 0;
+                }
+                h1 {
+                    font-size: 48px;
+                    color: #e74c3c;
+                    margin-top: 50px;
+                }
+                p {
+                    font-size: 18px;
+                    color: #555;
+                }
+                img {
+                    width: 50%;
+                    margin-top: 20px;
+                }
+                a {
+                    display: inline-block;
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    color: white;
+                    background-color: #3498db;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-size: 18px;
+                }
+                a:hover {
+                    background-color: #2980b9;
+                }
+            </style>
+        </head>
         <body>
             <h1>404: Страница не найдена</h1>
-            <p>К сожалению, страница, которую вы ищете, не существует.</p>
-            <a href="/lab1/web">Вернуться на главную</a>
+            <p>Извините, но страница, которую вы ищете, не существует. Возможно, она была перемещена или удалена.</p>
+            <p>Не волнуйтесь, вы всегда можете вернуться на <a href="/lab1/web">главную страницу</a>.</p>
+            <img src='""" + image_path + """' alt="404 error image">
         </body>
     </html>
     """, 404
+
 
 # Обработчик ошибки 500
 @app.errorhandler(500)
