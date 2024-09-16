@@ -222,19 +222,62 @@ def page_not_found(e):
     """, 404
 
 
-# Обработчик ошибки 500
+# Перехватчик для ошибки 500
 @app.errorhandler(500)
 def internal_server_error(e):
     return """
     <!doctype html>
     <html>
+        <head>
+            <title>Ошибка 500: Внутренняя ошибка сервера</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    color: #333;
+                    background-color: #f4f4f9;
+                    margin: 0;
+                    padding: 0;
+                }
+                h1 {
+                    font-size: 48px;
+                    color: #e74c3c;
+                    margin-top: 50px;
+                }
+                p {
+                    font-size: 18px;
+                    color: #555;
+                }
+                a {
+                    display: inline-block;
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    color: white;
+                    background-color: #3498db;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    font-size: 18px;
+                }
+                a:hover {
+                    background-color: #2980b9;
+                }
+            </style>
+        </head>
         <body>
             <h1>500: Внутренняя ошибка сервера</h1>
             <p>Произошла внутренняя ошибка на сервере. Мы уже работаем над её устранением.</p>
-            <a href="/lab1/web">Вернуться на главную</a>
+            <p>Пожалуйста, попробуйте зайти позже или вернитесь на <a href="/lab1/web">главную страницу</a>.</p>
         </body>
     </html>
     """, 500
+
+
+
+@app.route("/lab1/error500")
+def trigger_error():
+    result = 1 / 0  # Это вызовет ZeroDivisionError
+    return str(result)
+
 
 # HTTP заголовки
 @app.route("/lab1/response_headers")
@@ -354,4 +397,73 @@ def error418():
         </body>
     </html>
     """, 418
+
+
+# Маршрут с текстом и заголовками
+@app.route("/lab1/thewitcher")
+def thewitcher_page():
+    image_path = url_for("static", filename="custom_image.jpg")
+    return """
+    <!doctype html>
+    <html>
+        <head>
+            <title>The Witcher</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    color: #333;
+                    background-color: #f9f9f9;
+                    margin: 0;
+                    padding: 0;
+                }
+                h1 {
+                    text-align: center;
+                    color: #2c3e50;
+                    margin-top: 30px;
+                }
+                p {
+                    margin: 20px;
+                    font-size: 18px;
+                    line-height: 1.6;
+                }
+                footer {
+                    text-align: center;
+                    padding: 10px;
+                    background-color: #f8f8f8;
+                    position: auto;
+                    width: 100%;
+                    bottom: 0;
+                }
+               
+                 img {
+                    display: block;
+                    margin: 20px auto;
+                    width: 50%;
+                }
+            </style>
+        </head>
+        <body>
+            <h1>The Witcher</h1>
+            <p><strong>The Witcher</strong> — это вселенная, созданная польским писателем Анджеем Сапковским, 
+            где главный герой, ведьмак Геральт, охотится на чудовищ. Литературные произведения обрели популярность 
+            благодаря сложным моральным выборам и насыщенному миру.</p>
+
+            <p>Серия игр, разработанная CD Projekt Red, привнесла «Ведьмака» в массовую культуру. 
+            Наибольший успех пришёл с игрой <strong>The Witcher 3: Wild Hunt</strong>, которая стала одной из самых известных игр в мире.</p>
+
+            <p>Сериал от Netflix с Генри Кавиллом в главной роли ещё больше популяризировал франшизу, 
+            привлекая внимание новых поклонников и укрепляя позиции «Ведьмака» как важной фэнтези-саги современности.</p>
+            
+            <img src='""" + image_path + """' alt="Witcher Image">
+
+            <footer>
+                <p>Спасибо за внимание!</p>
+            </footer>
+        </body>
+    </html>
+    """, 200, {
+        'Content-Language': 'ru',  # Указывает, что страница на русском языке
+        'X-Custom-Header-One': 'Witcher Universe',  # Пользовательский заголовок
+        'X-Custom-Header-Two': 'Fantasy Saga'       # Ещё один пользовательский заголовок
+    }
 
