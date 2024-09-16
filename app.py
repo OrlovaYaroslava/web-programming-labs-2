@@ -227,3 +227,89 @@ def lab1():
         </body>
     </html>
     """
+
+
+# Страница с кодом 400 (Bad Request)
+@app.route("/lab1/error400")
+def error400():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>400: Bad Request</h1>
+            <p>Запрос не может быть выполнен из-за неверного синтаксиса.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 400
+
+# Страница с кодом 401 (Unauthorized)
+@app.route("/lab1/error401")
+def error401():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>401: Unauthorized</h1>
+            <p>Для доступа к запрашиваемому ресурсу требуется аутентификация.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 401
+
+# Страница с кодом 402 (Payment Required)
+@app.route("/lab1/error402")
+def error402():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>402: Payment Required</h1>
+            <p>Требуется оплата для доступа к ресурсу.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 402
+
+# Страница с кодом 403 (Forbidden)
+@app.route("/lab1/error403")
+def error403():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>403: Forbidden</h1>
+            <p>У вас нет прав для доступа к запрашиваемому ресурсу.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 403
+
+# Страница с кодом 405 (Method Not Allowed)
+@app.route("/lab1/error405")
+def error405():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>405: Method Not Allowed</h1>
+            <p>Метод, используемый в запросе, не поддерживается для запрашиваемого ресурса.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 405
+
+# Страница с кодом 418 (I'm a teapot)
+@app.route("/lab1/error418")
+def error418():
+    return """
+    <!doctype html>
+    <html>
+        <body>
+            <h1>418: I'm a teapot</h1>
+            <p>Я - чайник. Я не могу заварить кофе, потому что я чайник.</p>
+            <a href="/lab1/web">Вернуться на главную</a>
+        </body>
+    </html>
+    """, 418
+
