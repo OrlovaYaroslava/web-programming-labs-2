@@ -1,20 +1,63 @@
+/* Общие стили */
 body {
-    background-color: #f0f8ff; /* Светло-голубой фон */
+    background-color: #f5f5dc; /* Нюдовый бежевый фон */
     color: #333333; /* Цвет текста */
     font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
+/* Стили для заголовков */
+h1 {
+    color: #8b4513; /* Цвет заголовка - мягкий коричневый */
+}
+
+/* Стили для ссылок */
+a {
+    color: #d2691e; /* Тёплый цвет ссылок */
+    text-decoration: none;
+    display: block; /* Добавлено для того, чтобы каждая ссылка была на новой строке */
+    
+}
+
+a:hover {
+    color: #cd853f; /* Более яркий оттенок при наведении */
+}
+
+/* Стили для изображений */
 img {
     width: 400px;  /* Ширина изображения */
     height: auto;  /* Автоматическая высота */
     border: 5px solid #000; /* Черная рамка вокруг изображения */
     border-radius: 10px; /* Скругленные углы */
+    display: block; /* Чтобы изображение считалось блочным элементом */
+    margin: 20px auto; /* Центрирование изображения с отступами сверху и снизу */
 }
 
-h1 {
-    color: #2e8b57; /* Темно-зеленый цвет заголовка */
+/* Стили для header */
+header {
+    background-color: #f5deb3; /* Светлый бежевый цвет */
+    padding: 20px;
+    text-align: center;
 }
 
-a {
-    color: #ff6347; /* Цвет ссылки - томатный */
+/* Стили для footer */
+footer {
+    background-color: #f5deb3; /* Цвет футера аналогичен хедеру */
+    padding: 10px;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Стили для навигации */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 10px;
 }
