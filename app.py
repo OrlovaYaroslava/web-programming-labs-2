@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, url_for, redirect, render_template
 
 app = Flask(__name__)
 
@@ -438,3 +438,7 @@ def flowers(flower_id):
         return "Такого цветка нет", 404
     else:
         return f"<h1>Цветок: {flower_list[flower_id]}</h1>"
+    
+@app.route('/lab2/example')
+def example():
+    return render_template('example.html')
