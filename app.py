@@ -400,9 +400,41 @@ flower_list = ["Роза", "Тюльпан", "Ромашка", "Подсолну
                "Лаванда", "Мимоза", "Хризантема", "Фиалка", 
                "Фрезия", "Пион", "Магнолия", "Камелия"]
 
+
+    
+
+# Добавление цветка по URL с улучшенным выводом
+@app.route('/lab2/add_flower/<string:name>')
+def add_flower(name):
+    flower_list.append(name)
+    
+    # Формируем HTML-код для вывода сообщения и списка цветов
+    flowers_html = "<ul>"
+    for flower in flower_list:
+        flowers_html += f"<li>{flower}</li>"
+    flowers_html += "</ul>"
+    
+    # Подключаем стили
+    css_path = url_for('static', filename='lab1.css')
+    
+    return f"""
+        <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="{css_path}">
+        </head>
+        <body>
+            <h1>Цветок {name}</b> был успешно добавлен!</h1>
+            <p>Теперь в списке {len(flower_list)} цветов.</p>
+            <h2>Список всех цветов:</h2>
+            {flowers_html}
+        </body>
+        </html>
+    """
+
+# Отображение цветка по его индексу
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
     if flower_id >= len(flower_list):
         return "Такого цветка нет", 404
     else:
-        return "Цветок: " + flower_list[flower_id]
+        return f"<h1>Цветок: {flower_list[flower_id]}</h1>"
