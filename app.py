@@ -441,4 +441,5 @@ def flowers(flower_id):
     
 @app.route('/lab2/example')
 def example():
-    return render_template('example.html')
+    name='Ярослава Орлова'
+    return render_template('example.html', name=name)
