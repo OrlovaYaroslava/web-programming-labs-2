@@ -385,6 +385,7 @@ def thewitcher_page():
         'X-Custom-Header-Two': 'Fantasy Saga'
     }
 
+#ЛР2
 @app.route('/lab2/a')
 def a():
     return 'без слэша'
@@ -392,3 +393,16 @@ def a():
 @app.route('/lab2/a/')
 def a2():
     return 'со слэшем'
+
+flower_list = ["Роза", "Тюльпан", "Ромашка", "Подсолнух", 
+               "Лилия", "Орхидея", "Гладиолус", "Нарцисс", 
+               "Гиацинт", "Ирис", "Астра", "Гвоздика", 
+               "Лаванда", "Мимоза", "Хризантема", "Фиалка", 
+               "Фрезия", "Пион", "Магнолия", "Камелия"]
+
+@app.route('/lab2/flowers/<int:flower_id>')
+def flowers(flower_id):
+    if flower_id >= len(flower_list):
+        return "Такого цветка нет", 404
+    else:
+        return "Цветок: " + flower_list[flower_id]
