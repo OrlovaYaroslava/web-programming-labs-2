@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Орлова Ярослава Владиславовна. Лабораторная работа № {{ lab_number }}</title>
-     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lab1.css') }}">
-</head>
+    <title>
+        {% if name %} {{ name }} {% else %} Анонимус {% endif %}. 
+        Лабораторная работа № {% if lab_num %}{{ lab_num }}{% endif %}
+    </title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='lab1.css') }}">
 </head>
 <body>
     <header>
-        WEB-программирование, часть 2. Лабораторная работа № {{ lab_number }}
+        WEB-программирование, часть 2. 
+        {% if lab_num %}Лабораторная работа № {{ lab_num }}{% endif %}
     </header>
     <main>
         <h2>Вычисления</h2>
@@ -19,7 +22,23 @@
         <p>45<sup>8</sup> = {{ 45**8 }}</p>
     </main>
     <footer>
-        &copy; {{ name }}, {{ group }}, {{ course }} курс, 2024
+        &copy;
+        {% if name %}
+            {{ name }},
+        {% else %}
+            Анонимус,
+        {% endif %}
+        {% if group %}
+            {{ group }},
+        {% else %}
+            Группа не указана,
+        {% endif %}
+        {% if course %}
+            {{ course }} курс,
+        {% else %}
+            Курс не указан,
+        {% endif %}
+        2024
     </footer>
 </body>
 </html>

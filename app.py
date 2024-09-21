@@ -438,12 +438,13 @@ app = Flask(__name__)
 # Обработчик для примера с шаблоном
 @app.route('/lab2/example')
 def example():
-    name = 'Ярослава Орлова'
-    lab_number = 2
+    name = 'Ярослава Орлова'  #  убрать это значение для теста
+    lab_num = 2
     group = 'ФБИ-22'
     course = 3
     return render_template('example.html', 
                            name=name, 
-                           lab_number=lab_number, 
+                           lab_num=lab_num, 
                            group=group, 
                            course=course)
+
