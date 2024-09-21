@@ -384,3 +384,11 @@ def thewitcher_page():
         'X-Custom-Header-One': 'Witcher Universe',
         'X-Custom-Header-Two': 'Fantasy Saga'
     }
+
+@app.route('/lab2/a')
+def a():
+    return 'без слэша'
+
+@app.route('/lab2/a/')
+def a2():
+    return 'со слэшем'
