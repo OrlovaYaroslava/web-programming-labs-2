@@ -1,7 +1,7 @@
 /* Общие стили */
 body {
-    background-color: #f5f5dc; /* Нюдовый бежевый фон */
-    color: #333333; /* Цвет текста */
+    background-color: #f5f5dc;
+    color: #333333; 
     font-family: Arial, sans-serif;
     margin: 0;
     display: flex;
@@ -11,41 +11,41 @@ body {
 
 /* Стили для заголовков */
 h1 {
-    color: #8b4513; /* Цвет заголовка - мягкий коричневый */
+    color: #8b4513; 
 }
 
 /* Стили для ссылок */
 a {
-    color: #d2691e; /* Тёплый цвет ссылок */
+    color: #d2691e; 
     text-decoration: none;
-    display: block; /* Добавлено для того, чтобы каждая ссылка была на новой строке */
+    display: block; 
     
 }
 
 a:hover {
-    color: #cd853f; /* Более яркий оттенок при наведении */
+    color: #cd853f; 
 }
 
 /* Стили для изображений */
 img {
-    width: 400px;  /* Ширина изображения */
-    height: auto;  /* Автоматическая высота */
-    border: 5px solid #000; /* Черная рамка вокруг изображения */
-    border-radius: 10px; /* Скругленные углы */
-    display: block; /* Чтобы изображение считалось блочным элементом */
-    margin: 20px auto; /* Центрирование изображения с отступами сверху и снизу */
+    width: 400px;  
+    height: auto;  
+    border: 5px solid #000; 
+    border-radius: 10px; 
+    display: block; 
+    margin: 20px auto; 
 }
 
 /* Стили для header */
 header {
-    background-color: #f5deb3; /* Светлый бежевый цвет */
+    background-color: #f5deb3; 
     padding: 20px;
     text-align: center;
 }
 
 /* Стили для footer */
 footer {
-    background-color: #f5deb3; /* Цвет футера аналогичен хедеру */
+    background-color: #f5deb3; 
     padding: 10px;
     text-align: center;
     margin-top: auto;
