@@ -431,15 +431,19 @@ def add_flower(name):
         </html>
     """
 
-# Отображение цветка по его индексу
-@app.route('/lab2/flowers/<int:flower_id>')
-def flowers(flower_id):
-    if flower_id >= len(flower_list):
-        return "Такого цветка нет", 404
-    else:
-        return f"<h1>Цветок: {flower_list[flower_id]}</h1>"
-    
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+# Обработчик для примера с шаблоном
 @app.route('/lab2/example')
 def example():
-    name='Ярослава Орлова'
-    return render_template('example.html', name=name)
+    name = 'Ярослава Орлова'
+    lab_number = 2
+    group = 'ФБИ-22'
+    course = 3
+    return render_template('example.html', 
+                           name=name, 
+                           lab_number=lab_number, 
+                           group=group, 
+                           course=course)
