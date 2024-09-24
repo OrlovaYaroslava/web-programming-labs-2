@@ -580,3 +580,22 @@ def filters():
     phrase = "О сколько нам открытий чудных..."
     return render_template('filter.html', phrase=phrase)
 
+# Список книг
+books = [
+    {"author": "Джордж Оруэлл", "title": "1984", "genre": "Антиутопия", "pages": 328},
+    {"author": "Федор Достоевский", "title": "Преступление и наказание", "genre": "Роман", "pages": 671},
+    {"author": "Лев Толстой", "title": "Война и мир", "genre": "Эпос", "pages": 1225},
+    {"author": "Дж. Р. Р. Толкин", "title": "Властелин колец", "genre": "Фэнтези", "pages": 1137},
+    {"author": "Джейн Остин", "title": "Гордость и предубеждение", "genre": "Роман", "pages": 279},
+    {"author": "Михаил Булгаков", "title": "Мастер и Маргарита", "genre": "Мистицизм", "pages": 480},
+    {"author": "Габриэль Гарсиа Маркес", "title": "Сто лет одиночества", "genre": "Магический реализм", "pages": 417},
+    {"author": "Марк Твен", "title": "Приключения Тома Сойера", "genre": "Приключения", "pages": 224},
+    {"author": "Джек Лондон", "title": "Зов предков", "genre": "Приключения", "pages": 232},
+    {"author": "Харпер Ли", "title": "Убить пересмешника", "genre": "Роман", "pages": 336}
+]
+
+@app.route('/lab2/books')
+def show_books():
+    return render_template('books.html', books=books)
+
+
