@@ -431,20 +431,25 @@ def add_flower(name):
         </html>
     """
 
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
 # Обработчик для примера с шаблоном
 @app.route('/lab2/example')
 def example():
-    name = 'Ярослава Орлова'  #  убрать это значение для теста
+    name = 'Ярослава Орлова'
     lab_num = 2
     group = 'ФБИ-22'
     course = 3
+    fruits = [
+        {'name': 'яблоки', 'price': 100},
+        {'name': 'груши', 'price': 120},
+        {'name': 'апельсины', 'price': 80},
+        {'name': 'мандарины', 'price': 95},
+        {'name': 'манго', 'price': 321}
+    ]
     return render_template('example.html', 
                            name=name, 
                            lab_num=lab_num, 
                            group=group, 
-                           course=course)
+                           course=course,
+                           fruits=fruits)
+
 
