@@ -509,6 +509,42 @@ def clear_flowers():
         </body>
         </html>
     """
+#Выражения
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    addition = a + b
+    subtraction = a - b
+    multiplication = a * b
+    division = a / b if b != 0 else "На ноль делить нельзя"
+    exponentiation = a ** b
+    
+    return f"""
+        <html>
+        <head>
+            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+        </head>
+        <body>
+            <h1>Расчёт с параметрами: {a} и {b}</h1>
+            <p>{a} + {b} = {addition}</p>
+            <p>{a} - {b} = {subtraction}</p>
+            <p>{a} * {b} = {multiplication}</p>
+            <p>{a} / {b} = {division}</p>
+            <p>{a}<sup>{b}</sup> = {exponentiation}</p>
+        </body>
+        </html>
+    """
+
+#Маршрут перенаправления по умолчанию на /lab2/calc/1/1
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect(url_for('calc', a=1, b=1))
+
+#Перенаправление с числом a в URL
+@app.route('/lab2/calc/<int:a>')
+def calc_with_a(a):
+    return redirect(url_for('calc', a=a, b=1))
+
 
 
 
