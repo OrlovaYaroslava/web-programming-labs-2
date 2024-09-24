@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block lab %}
+    Лабораторная работа 2
+{% endblock %}
+
+{% block main %}
+    <div>Фраза: {{ phrase }}</div>
+    <div>Фраза с фильтром title: {{ phrase | title }}</div>
+    <div>Фраза без тегов (striptags): {{ phrase | striptags }}</div>
+    <div>Фраза с безопасными тегами (safe): {{ phrase | safe }}</div>
+    <div>Фраза с несколькими фильтрами: 
+        {{ phrase | striptags | replace('сколько', 'много') | replace('нам', 'тут') | upper }}
+    </div>
+{% endblock %}
