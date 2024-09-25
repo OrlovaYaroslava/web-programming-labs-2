@@ -25,6 +25,7 @@ def index():
             <nav>
                 <ul>
                     <li><a href="/lab1">Первая лабораторная</a></li>
+                    <li><a href="/lab2">Вторая лабораторная</a></li>
                 </ul>
             </nav>
             <footer>
@@ -53,7 +54,7 @@ def lab1():
             <p>Flask — фреймворк для создания веб-приложений на языке программирования Python...</p>
             <nav>
                 <ul>
-                    <li><a href="/lab1/web">Главная страница лабораторной (/lab1/web)</a></li>
+                    <li><a href="/lab1/web">Задания лабораторной (/lab1/web)</a></li>
                 </ul>
             </nav>
             <footer>
