@@ -419,13 +419,15 @@ def add_flower(name):
         flowers_html += f"<li>{flower}</li>"
     flowers_html += "</ul>"
     
-    # Подключаем стили
+    # Подключаем стили и фавиконку
     css_path = url_for('static', filename='lab1.css')
+    favicon_path = url_for('static', filename='favicon.ico')
     
     return f"""
         <html>
         <head>
             <link rel="stylesheet" type="text/css" href="{css_path}">
+            <link rel="icon" type="image/x-icon" href="{favicon_path}">
         </head>
         <body>
             <h1>Цветок {name} был успешно добавлен!</h1>
@@ -441,11 +443,15 @@ def add_flower(name):
 
 @app.route('/lab2/flowers')
 def show_flowers():
+    css_path = url_for('static', filename='lab1.css')
+    favicon_path = url_for('static', filename='favicon.ico')
+
     if not flower_list:
         return f"""
             <html>
             <head>
-                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+                <link rel="stylesheet" type="text/css" href="{css_path}">
+                <link rel="icon" type="image/x-icon" href="{favicon_path}">
             </head>
             <body>
                 <h1>Список цветов пуст.</h1>
@@ -463,7 +469,8 @@ def show_flowers():
     return f"""
         <html>
         <head>
-            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+            <link rel="stylesheet" type="text/css" href="{css_path}">
+            <link rel="icon" type="image/x-icon" href="{favicon_path}">
         </head>
         <body>
             <h1>Всего цветов: {len(flower_list)}</h1>
@@ -475,15 +482,20 @@ def show_flowers():
         </html>
     """
 
+
 @app.route('/lab2/flowers/<int:flower_id>')
 def flowers(flower_id):
+    css_path = url_for('static', filename='lab1.css')
+    favicon_path = url_for('static', filename='favicon.ico')
+
     if flower_id >= len(flower_list):
         return "Такого цветка нет", 404
     else:
         return f"""
             <html>
             <head>
-                <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+                <link rel="stylesheet" type="text/css" href="{css_path}">
+                <link rel="icon" type="image/x-icon" href="{favicon_path}">
             </head>
             <body>
                 <h1>Цветок: {flower_list[flower_id]}</h1>
@@ -493,15 +505,20 @@ def flowers(flower_id):
             </html>
         """
 
+
 @app.route('/lab2/clear_flowers')
 def clear_flowers():
     global flower_list  # Указываем, что работаем с глобальной переменной
     flower_list.clear()
     
+    css_path = url_for('static', filename='lab1.css')
+    favicon_path = url_for('static', filename='favicon.ico')
+
     return f"""
         <html>
         <head>
-            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+            <link rel="stylesheet" type="text/css" href="{css_path}">
+            <link rel="icon" type="image/x-icon" href="{favicon_path}">
         </head>
         <body>
             <h1>Список цветов был успешно очищен!</h1>
@@ -510,6 +527,7 @@ def clear_flowers():
         </body>
         </html>
     """
+
 #Выражения
 
 @app.route('/lab2/calc/<int:a>/<int:b>')
