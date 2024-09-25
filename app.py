@@ -598,4 +598,16 @@ books = [
 def show_books():
     return render_template('books.html', books=books)
 
+#Машины
+cars = [
+    {"name": "Tesla Model S", "description": "Электромобиль от Tesla", "image": "tesla_model_s.jpg"},
+    {"name": "BMW i8", "description": "Гибридный спортивный автомобиль", "image": "bmw_i8.jpg"},
+    {"name": "Audi R8", "description": "Спортивный автомобиль от Audi", "image": "audi_r8.webp"},
+    {"name": "Porsche 911", "description": "Знаменитый спортивный автомобиль", "image": "porsche_911.jpg"},
+    {"name": "Lamborghini Aventador", "description": "Высокопроизводительный суперкар", "image": "lamborghini_aventador.jpg"}
+]
+
+@app.route('/lab2/cars')
+def show_cars():
+    return render_template('cars.html', cars=cars)
 
