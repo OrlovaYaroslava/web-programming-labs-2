@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect, render_template
+from flask import Flask, url_for, redirect, render_template, request
 
 app = Flask(__name__)
 
@@ -396,137 +396,59 @@ def a2():
     return 'со слэшем'
 
 #Цветы
-flower_list = ["Роза", "Тюльпан", "Ромашка", "Подсолнух", 
-               "Лилия", "Орхидея", "Гладиолус", "Нарцисс", 
-               "Гиацинт", "Ирис", "Астра", "Гвоздика", 
-               "Лаванда", "Мимоза", "Хризантема", "Фиалка", 
-               "Фрезия", "Пион", "Магнолия", "Камелия"]
+flower_list = [
+    {"name": "Роза", "price": 300},
+    {"name": "Тюльпан", "price": 310},
+    {"name": "Ромашка", "price": 320},
+    {"name": "Подсолнух", "price": 330},
+    {"name": "Лилия", "price": 340}
+]
+
+   
+
+@app.route('/lab2/add_flower', methods=['GET'])
+def add_flower():
+    name = request.args.get('name')
+    price = request.args.get('price')
+
+    if not name or not price:
+        return "Неверные данные: необходимо указать название цветка и его цену", 400
+
+    # Добавляем новый цветок в список
+    flower_list.append({"name": name, "price": int(price)})
+
+    # Перенаправляем на страницу с цветами
+    return redirect(url_for('show_flowers'))
 
 
-    
-
-@app.route('/lab2/add_flower/', defaults={'name': None})
-@app.route('/lab2/add_flower/<string:name>')
-def add_flower(name):
-    if not name:
-        return "Вы не задали имя цветка", 400
-
-    flower_list.append(name)
-    
-    # Формируем HTML-код для вывода сообщения и списка цветов
-    flowers_html = "<ul>"
-    for flower in flower_list:
-        flowers_html += f"<li>{flower}</li>"
-    flowers_html += "</ul>"
-    
-    # Подключаем стили и фавиконку
-    css_path = url_for('static', filename='lab1.css')
-    favicon_path = url_for('static', filename='favicon.ico')
-    
-    return f"""
-        <html>
-        <head>
-            <link rel="stylesheet" type="text/css" href="{css_path}">
-            <link rel="icon" type="image/x-icon" href="{favicon_path}">
-        </head>
-        <body>
-            <h1>Цветок {name} был успешно добавлен!</h1>
-            <p>Теперь в списке {len(flower_list)} цветов.</p>
-            <h2>Список всех цветов:</h2>
-            {flowers_html}
-            <br>
-            <a href='/lab2/flowers'>Посмотреть все цветы</a>
-        </body>
-        </html>
-    """
 
 
 @app.route('/lab2/flowers')
 def show_flowers():
-    css_path = url_for('static', filename='lab1.css')
-    favicon_path = url_for('static', filename='favicon.ico')
-
-    if not flower_list:
-        return f"""
-            <html>
-            <head>
-                <link rel="stylesheet" type="text/css" href="{css_path}">
-                <link rel="icon" type="image/x-icon" href="{favicon_path}">
-            </head>
-            <body>
-                <h1>Список цветов пуст.</h1>
-                <br>
-                <a href='/lab2/add_flower/Роза'>Добавить первый цветок</a>
-            </body>
-            </html>
-        """
-    
-    flowers_html = "<ul>"
-    for flower in flower_list:
-        flowers_html += f"<li>{flower}</li>"
-    flowers_html += "</ul>"
-    
-    return f"""
-        <html>
-        <head>
-            <link rel="stylesheet" type="text/css" href="{css_path}">
-            <link rel="icon" type="image/x-icon" href="{favicon_path}">
-        </head>
-        <body>
-            <h1>Всего цветов: {len(flower_list)}</h1>
-            <h2>Список всех цветов:</h2>
-            {flowers_html}
-            <br>
-            <a href='/lab2/clear_flowers'>Очистить список цветов</a>
-        </body>
-        </html>
-    """
+    lab_num = 2  # Номер лабораторной работы
+    return render_template('flowers.html', flower_list=flower_list, lab_num=lab_num)
 
 
-@app.route('/lab2/flowers/<int:flower_id>')
-def flowers(flower_id):
-    css_path = url_for('static', filename='lab1.css')
-    favicon_path = url_for('static', filename='favicon.ico')
-
-    if flower_id >= len(flower_list):
-        return "Такого цветка нет", 404
+@app.route('/lab2/del_flower/<int:flower_id>')
+def delete_flower(flower_id):
+    if 0 <= flower_id < len(flower_list):
+        del flower_list[flower_id]
     else:
-        return f"""
-            <html>
-            <head>
-                <link rel="stylesheet" type="text/css" href="{css_path}">
-                <link rel="icon" type="image/x-icon" href="{favicon_path}">
-            </head>
-            <body>
-                <h1>Цветок: {flower_list[flower_id]}</h1>
-                <br>
-                <a href='/lab2/flowers'>Посмотреть все цветы</a>
-            </body>
-            </html>
-        """
+        return "Такого цветка нет", 404
+
+    # После удаления цветка возвращаемся на страницу со списком цветов
+    return redirect(url_for('show_flowers'))
 
 
 @app.route('/lab2/clear_flowers')
 def clear_flowers():
-    global flower_list  # Указываем, что работаем с глобальной переменной
+    global flower_list
     flower_list.clear()
-    
-    css_path = url_for('static', filename='lab1.css')
-    favicon_path = url_for('static', filename='favicon.ico')
 
-    return f"""
-        <html>
-        <head>
-            <link rel="stylesheet" type="text/css" href="{css_path}">
-            <link rel="icon" type="image/x-icon" href="{favicon_path}">
-        </head>
-        <body>
-            <h1>Список цветов был успешно очищен!</h1>
-            <br>
-            <a href='/lab2/flowers'>Посмотреть все цветы</a>
-        </body>
-        </html>
-    """
+    # Возвращаемся на страницу со списком цветов после очистки
+    return redirect(url_for('show_flowers'))
+
+
 
 #Выражения
 
@@ -630,3 +552,4 @@ cars = [
 def show_cars():
     return render_template('cars.html', cars=cars)
 
+#напиши отчет потом делай доп задание
