@@ -59,7 +59,7 @@ def lab1():
             </nav>
             <footer>
                 <p>Студент: Орлова Ярослава Владиславовна</p>
-                <p>Группа: ФБИ-22, Курс: 3, 2024</p>
+                <p>Группа: ФБИ-22, Курс: , 2024</p>
             </footer>
         </body>
     </html>
@@ -492,7 +492,7 @@ def calc_with_a(a):
 # Обработчик для примера с шаблоном
 @app.route('/lab2/example')
 def example():
-    name = 'Ярослава Орлова'
+    name = ''
     lab_num = 2
     group = 'ФБИ-22'
     course = 3
@@ -551,5 +551,3 @@ cars = [
 @app.route('/lab2/cars')
 def show_cars():
     return render_template('cars.html', cars=cars)
-
-#напиши отчет потом делай доп задание
