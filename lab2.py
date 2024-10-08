@@ -1,16 +1,19 @@
 from flask import Blueprint, url_for, redirect,render_template, request
-from lab1 import lab1
 lab2 = Blueprint('lab2', __name__)
+
 
 @lab2.route('/lab2/a')
 def a():
     return 'без слэша'
 
+
 @lab2.route('/lab2/a/')
 def a2():
     return 'со слэшем'
 
+
 #Цветы
+
 flower_list = [
     {"name": "Роза", "price": 300},
     {"name": "Тюльпан", "price": 310},
@@ -18,7 +21,6 @@ flower_list = [
     {"name": "Подсолнух", "price": 330},
     {"name": "Лилия", "price": 340}
 ]
-
    
 
 @lab2.route('/lab2/add_flower', methods=['GET'])
@@ -35,8 +37,6 @@ def add_flower():
 
     # Перенаправляем на страницу с цветами
     return redirect(url_for('lab2.show_flowers'))
-
-
 
 
 @lab2.route('/lab2/flowers')
@@ -63,7 +63,6 @@ def clear_flowers():
 
     # Возвращаемся на страницу со списком цветов после очистки
     return redirect(url_for('lab2.show_flowers'))
-
 
 
 #Выражения
@@ -93,18 +92,21 @@ def calc(a, b):
     """
 
 #Маршрут перенаправления по умолчанию на /lab2/calc/1/1
+
 @lab2.route('/lab2/calc/')
 def calc_default():
     return redirect(url_for('lab2.calc', a=1, b=1))
 
 
 #Перенаправление с числом a в URL
+
 @lab2.route('/lab2/calc/<int:a>')
 def calc_with_a(a):
     return redirect(url_for('lab2.calc', a=a, b=1))
 
 
 # Обработчик для примера с шаблоном
+
 @lab2.route('/lab2/example')
 def example():
     name = 'Ярослава Орлова'
@@ -136,7 +138,9 @@ def filters():
     phrase = "О сколько нам открытий чудных..."
     return render_template('filter.html', phrase=phrase)
 
+
 # Список книг
+
 books = [
     {"author": "Джордж Оруэлл", "title": "1984", "genre": "Антиутопия", "pages": 328},
     {"author": "Федор Достоевский", "title": "Преступление и наказание", "genre": "Роман", "pages": 671},
@@ -150,11 +154,14 @@ books = [
     {"author": "Харпер Ли", "title": "Убить пересмешника", "genre": "Роман", "pages": 336}
 ]
 
+
 @lab2.route('/lab2/books')
 def show_books():
     return render_template('books.html', books=books)
 
+
 #Машины
+
 cars = [
     {"name": "Tesla Model S", "description": "Электромобиль от Tesla", "image": "tesla_model_s.jpg"},
     {"name": "BMW i8", "description": "Гибридный спортивный автомобиль", "image": "bmw_i8.jpg"},
@@ -162,6 +169,7 @@ cars = [
     {"name": "Porsche 911", "description": "Знаменитый спортивный автомобиль", "image": "porsche_911.jpg"},
     {"name": "Lamborghini Aventador", "description": "Высокопроизводительный суперкар", "image": "lamborghini_aventador.jpg"}
 ]
+
 
 @lab2.route('/lab2/cars')
 def show_cars():
