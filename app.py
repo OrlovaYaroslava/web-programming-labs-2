@@ -12,7 +12,7 @@ app.register_blueprint(lab3)
 @app.route("/")
 @app.route("/index")
 def index():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""
     <!doctype html>
     <html>
@@ -43,7 +43,7 @@ def index():
 # Обработчик ошибки 404
 @app.errorhandler(404)
 def page_not_found(e):
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     image_path = url_for("static", filename="404_image.jpg")
     return f"""
     <!doctype html>

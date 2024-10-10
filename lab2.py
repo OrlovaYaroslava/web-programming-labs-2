@@ -42,7 +42,7 @@ def add_flower():
 @lab2.route('/lab2/flowers')
 def show_flowers():
     lab_num = 2  # Номер лабораторной работы
-    return render_template('flowers.html', flower_list=flower_list, lab_num=lab_num)
+    return render_template('lab2/flowers.html', flower_list=flower_list, lab_num=lab_num)
 
 
 @lab2.route('/lab2/del_flower/<int:flower_id>')
@@ -78,7 +78,7 @@ def calc(a, b):
     return f"""
         <html>
         <head>
-            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1.css')}">
+            <link rel="stylesheet" type="text/css" href="{url_for('static', filename='lab1/lab1.css')}">
         </head>
         <body>
             <h1>Расчёт с параметрами: {a} и {b}</h1>
@@ -120,7 +120,7 @@ def example():
         {'name': 'мандарины', 'price': 95},
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', 
+    return render_template('lab2/example.html', 
                            name=name, 
                            lab_num=lab_num, 
                            group=group, 
@@ -130,13 +130,13 @@ def example():
 
 @lab2.route('/lab2')
 def lab2_home():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О сколько нам открытий чудных..."
-    return render_template('filter.html', phrase=phrase)
+    return render_template('lab2/filter.html', phrase=phrase)
 
 
 # Список книг
@@ -157,20 +157,20 @@ books = [
 
 @lab2.route('/lab2/books')
 def show_books():
-    return render_template('books.html', books=books)
+    return render_template('lab2/books.html', books=books)
 
 
 #Машины
 
 cars = [
-    {"name": "Tesla Model S", "description": "Электромобиль от Tesla", "image": "tesla_model_s.jpg"},
-    {"name": "BMW i8", "description": "Гибридный спортивный автомобиль", "image": "bmw_i8.jpg"},
-    {"name": "Audi R8", "description": "Спортивный автомобиль от Audi", "image": "audi_r8.webp"},
-    {"name": "Porsche 911", "description": "Знаменитый спортивный автомобиль", "image": "porsche_911.jpg"},
-    {"name": "Lamborghini Aventador", "description": "Высокопроизводительный суперкар", "image": "lamborghini_aventador.jpg"}
+    {"name": "Tesla Model S", "description": "Электромобиль от Tesla", "image": "lab2/tesla_model_s.jpg"},
+    {"name": "BMW i8", "description": "Гибридный спортивный автомобиль", "image": "lab2/bmw_i8.jpg"},
+    {"name": "Audi R8", "description": "Спортивный автомобиль от Audi", "image": "lab2/audi_r8.webp"},
+    {"name": "Porsche 911", "description": "Знаменитый спортивный автомобиль", "image": "lab2/porsche_911.jpg"},
+    {"name": "Lamborghini Aventador", "description": "Высокопроизводительный суперкар", "image": "lab2/lamborghini_aventador.jpg"}
 ]
 
 
 @lab2.route('/lab2/cars')
 def show_cars():
-    return render_template('cars.html', cars=cars)
+    return render_template('lab2/cars.html', cars=cars)

@@ -10,7 +10,7 @@ count = 0
 # Маршрут /lab1
 @lab1.route("/lab1")
 def lab_home():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""
     <!doctype html>
     <html>
@@ -41,7 +41,7 @@ def lab_home():
 @lab1.route("/lab1/resource")
 def resource_status():
     global resource_created
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     status = "Ресурс создан" if resource_created else "Ресурс ещё не создан"
     return f"""
     <!doctype html>
@@ -69,7 +69,7 @@ def resource_status():
 @lab1.route("/lab1/create_resource")
 def create_resource():
     global resource_created
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     if resource_created:
         return f"""
         <!doctype html>
@@ -105,7 +105,7 @@ def create_resource():
 @lab1.route("/lab1/delete_resource")
 def delete_resource():
     global resource_created
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     if resource_created:
         resource_created = False
         return f"""
@@ -140,7 +140,7 @@ def delete_resource():
 # Маршрут /lab1/web с полным списком всех роутов
 @lab1.route("/lab1/web")
 def web():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""<!doctype html>
         <html>
             <head>
@@ -178,7 +178,7 @@ def web():
 # Страница автора
 @lab1.route("/lab1/author")
 def author():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     name = "Орлова Ярослава Владиславовна"
     group = "ФБИ-22"
     faculty = "ФБ"
@@ -201,8 +201,8 @@ def author():
 # Страница с дубом и подключение CSS
 @lab1.route("/lab1/oak") 
 def oak(): 
-    image_path = url_for("static", filename="oak.jpg")
-    css_path = url_for("static", filename="lab1.css")
+    image_path = url_for("static", filename="lab1/oak.jpg")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f''' 
 <!doctype html> 
 <html> 
@@ -221,7 +221,7 @@ def oak():
 @lab1.route("/lab1/counter")
 def counter():
     global count
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     count += 1
     return f"""
     <!doctype html>
@@ -245,7 +245,7 @@ def counter():
 @lab1.route("/lab1/reset_counter")
 def reset_counter():
     global count
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     count = 0  # Сбрасываем счётчик в 0
     return f"""
     <!doctype html>
@@ -273,7 +273,7 @@ def info():
 # Код 201 "Created"
 @lab1.route("/lab1/create")
 def create():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""
     <!doctype html>
     <html>
@@ -292,7 +292,7 @@ def create():
 # HTTP заголовки
 @lab1.route("/lab1/response_headers")
 def response_headers():
-    css_path = url_for("static", filename="lab1.css")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""<!doctype html> 
         <html>
             <head>
@@ -311,8 +311,8 @@ def response_headers():
 # Страница с текстом про The Witcher
 @lab1.route("/lab1/thewitcher")
 def thewitcher_page():
-    image_path = url_for("static", filename="custom_image.jpg")
-    css_path = url_for("static", filename="lab1.css")
+    image_path = url_for("static", filename="lab1/custom_image.jpg")
+    css_path = url_for("static", filename="lab1/lab1.css")
     return f"""
     <!doctype html>
     <html>
