@@ -76,3 +76,31 @@ def pay():
 @lab3.route('/lab3/success', methods=['POST'])
 def success():
     return render_template('lab3/success.html')
+
+
+@lab3.route('/lab3/settings', methods=['GET', 'POST'])
+def settings():
+    color = request.args.get('color')
+    bg_color = request.args.get('bg_color')
+    font_size = request.args.get('font_size')
+    bold = request.args.get('bold')
+
+    resp = make_response(render_template('lab3/settings.html', color=color, bg_color=bg_color, font_size=font_size, bold=bold))
+
+    # Устанавливаем cookie только если они были переданы в запросе
+    if color:
+        resp.set_cookie('color', color)
+    if bg_color:
+        resp.set_cookie('bg_color', bg_color)
+    if font_size:
+        resp.set_cookie('font_size', font_size)
+    if bold:
+        resp.set_cookie('bold', bold)
+    else:
+        resp.set_cookie('bold', '', expires=0)  # Удаляем cookie bold, если параметр не был передан
+
+    return resp
+
+
+
+
