@@ -108,5 +108,38 @@ def settings():
     return resp
 
 
+@lab3.route('/lab3/ticket', methods=['GET', 'POST'])
+def ticket():
+    if request.method == 'POST':
+        fio = request.form.get('fio')
+        polka = request.form.get('polka')
+        belie = request.form.get('belie')
+        bagazh = request.form.get('bagazh')
+        age = int(request.form.get('age'))
+        departure = request.form.get('departure')
+        destination = request.form.get('destination')
+        date = request.form.get('date')
+        insurance = request.form.get('insurance')
 
+        # Логика расчета цены
+        if age < 18:
+            ticket_type = "Детский билет"
+            price = 700
+        else:
+            ticket_type = "Взрослый билет"
+            price = 1000
+
+        if polka in ["нижняя", "нижняя боковая"]:
+            price += 100
+        if belie:
+            price += 75
+        if bagazh:
+            price += 250
+        if insurance:
+            price += 150
+
+        return render_template('lab3/ticket_result.html', fio=fio, polka=polka, ticket_type=ticket_type,
+                               price=price, departure=departure, destination=destination, date=date)
+
+    return render_template('lab3/ticket_form.html')
 

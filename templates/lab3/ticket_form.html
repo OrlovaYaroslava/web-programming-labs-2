@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h1>Железнодорожный билет</h1>
+<form method="POST" action="/lab3/ticket">
+    <div>
+        <label>ФИО пассажира:</label>
+        <input type="text" name="fio" required>
+    </div>
+    <div>
+        <label>Полка:</label>
+        <select name="polka" required>
+            <option value="нижняя">Нижняя</option>
+            <option value="верхняя">Верхняя</option>
+            <option value="верхняя боковая">Верхняя боковая</option>
+            <option value="нижняя боковая">Нижняя боковая</option>
+        </select>
+    </div>
+    <div>
+        <label>С бельем:</label>
+        <input type="checkbox" name="belie">
+    </div>
+    <div>
+        <label>С багажом:</label>
+        <input type="checkbox" name="bagazh">
+    </div>
+    <div>
+        <label>Возраст:</label>
+        <input type="number" name="age" min="1" max="120" required>
+    </div>
+    <div>
+        <label>Пункт выезда:</label>
+        <input type="text" name="departure" required>
+    </div>
+    <div>
+        <label>Пункт назначения:</label>
+        <input type="text" name="destination" required>
+    </div>
+    <div>
+        <label>Дата поездки:</label>
+        <input type="date" name="date" required>
+    </div>
+    <div>
+        <label>Нужна ли страховка:</label>
+        <input type="checkbox" name="insurance">
+    </div>
+    <button type="submit">Отправить</button>
+</form>
+{% endblock %}

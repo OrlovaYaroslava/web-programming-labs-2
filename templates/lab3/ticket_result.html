@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h1>Ваш билет</h1>
+<p>ФИО: {{ fio }}</p>
+<p>Полка: {{ polka }}</p>
+<p>Тип билета: {{ ticket_type }}</p>
+<p>Стоимость: {{ price }} руб.</p>
+<p>Пункт выезда: {{ departure }}</p>
+<p>Пункт назначения: {{ destination }}</p>
+<p>Дата поездки: {{ date }}</p>
+{% endblock %}
