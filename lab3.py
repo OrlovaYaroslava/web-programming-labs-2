@@ -160,3 +160,38 @@ def clear_settings():
     
     return resp
 
+
+# Список товаров
+products = [
+    {'name': 'Apple iPhone 12', 'price': 15000, 'brand': 'Apple', 'color': 'Black'},
+    {'name': 'Samsung Galaxy S21', 'price': 25000, 'brand': 'Samsung', 'color': 'White'},
+    {'name': 'Dell XPS 13', 'price': 55000, 'brand': 'Dell', 'color': 'Silver'},
+    {'name': 'LG OLED TV', 'price': 45000, 'brand': 'LG', 'color': 'Black'},
+    {'name': 'Apple Watch Series 6', 'price': 12000, 'brand': 'Apple', 'color': 'Gold'},
+    {'name': 'Samsung Galaxy Tab S7', 'price': 18000, 'brand': 'Samsung', 'color': 'Gray'},
+    {'name': 'Sony WH-1000XM4', 'price': 5000, 'brand': 'Sony', 'color': 'Red'},
+    {'name': 'PlayStation 5', 'price': 35000, 'brand': 'Sony', 'color': 'Black'},
+    {'name': 'Canon EOS 90D', 'price': 60000, 'brand': 'Canon', 'color': 'Black'},
+    {'name': 'Xiaomi Mi Electric Scooter', 'price': 30000, 'brand': 'Xiaomi', 'color': 'Green'},
+    {'name': 'Acer Predator Monitor', 'price': 20000, 'brand': 'Acer', 'color': 'Black'},
+    {'name': 'Logitech G502 Mouse', 'price': 3000, 'brand': 'Logitech', 'color': 'White'},
+    {'name': 'Corsair K95 Keyboard', 'price': 4500, 'brand': 'Corsair', 'color': 'Black'},
+    {'name': 'TP-Link Archer C6', 'price': 6000, 'brand': 'TP-Link', 'color': 'White'},
+    {'name': 'Fitbit Versa 3', 'price': 10000, 'brand': 'Fitbit', 'color': 'Black'},
+    {'name': 'Anker PowerCore 10000', 'price': 1500, 'brand': 'Anker', 'color': 'Blue'},
+    {'name': 'SanDisk 64GB USB Drive', 'price': 800, 'brand': 'SanDisk', 'color': 'Red'},
+    {'name': 'HP LaserJet Pro MFP', 'price': 17000, 'brand': 'HP', 'color': 'White'},
+    {'name': 'Bosch Serie 6 Washing Machine', 'price': 35000, 'brand': 'Bosch', 'color': 'Silver'},
+    {'name': 'Dyson V11 Vacuum Cleaner', 'price': 9000, 'brand': 'Dyson', 'color': 'Red'}
+]
+
+# Страница формы для поиска товаров по диапазону цен
+@lab3.route('/lab3/products', methods=['GET', 'POST'])
+def products_search():
+    if request.method == 'POST':
+        min_price = int(request.form.get('min_price'))
+        max_price = int(request.form.get('max_price'))
+        filtered_products = [p for p in products if min_price <= p['price'] <= max_price]
+        return render_template('lab3/products_results.html', products=filtered_products)
+
+    return render_template('lab3/products_form.html')
