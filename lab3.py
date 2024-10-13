@@ -4,9 +4,15 @@ lab3 = Blueprint('lab3', __name__)
 # Вывод cookie на странице
 @lab3.route('/lab3/')
 def lab3_page():
-    name = request.cookies.get('name', 'None')  
+    # Проверка на наличие имени и замена 'None' на 'аноним'
+    name = request.cookies.get('name', 'аноним')  
     name_color = request.cookies.get('name_color', 'black')  
-    return render_template('lab3/lab3.html', name=name, name_color=name_color)
+
+    # Проверка на наличие возраста и замена 'None' на 'неизвестен'
+    age = request.cookies.get('age', 'неизвестен')
+
+    return render_template('lab3/lab3.html', name=name, name_color=name_color, age=age)
+
 
 
 # Установка cookies
