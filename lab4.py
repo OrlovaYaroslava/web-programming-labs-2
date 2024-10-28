@@ -195,3 +195,42 @@ def fridge():
             error = "Ошибка: не задана температура"
 
     return render_template('lab4/fridge.html', error=error, temperature=temperature, snowflakes=snowflakes)
+
+
+@lab4.route('/lab4/grain', methods=['GET', 'POST'])
+def grain():
+    error = None
+    grain = None
+    weight = 0
+    price = 0
+    discount = 0
+
+    prices = {
+        'ячмень': 12345,
+        'овёс': 8522,
+        'пшеница': 8722,
+        'рожь': 14111
+    }
+
+    if request.method == 'POST':
+        grain = request.form.get('grain')
+        try:
+            weight = float(request.form.get('weight', ''))
+        except ValueError:
+            error = "Вес не был указан или введено неверное значение."
+            return render_template('lab4/grain.html', error=error, grain=grain, weight=weight, price=price, discount=discount)
+
+        if grain not in prices:
+            error = "Зерно не указано."
+        elif weight <= 0:
+            error = "Вес указан неверно или слишком мал для заказа."
+        elif weight > 500:
+            error = "Такого объёма зерна сейчас нет в наличии."
+        else:
+            price = prices[grain] * weight
+
+            if weight > 50:
+                discount = 10
+                price *= 0.9
+
+    return render_template('lab4/grain.html', error=error, grain=grain, weight=weight, price=price, discount=discount)
