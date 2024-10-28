@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 
-{% block lab %}Лабораторная работа 4{% endblock %}
+{% block lab %}
+    Лабораторная работа 4
+{% endblock %}
 
 {% block main %}
-    <h1>Вход</h1>
-    {% if not authorized %}
-        <p>Пожалуйста, авторизуйтесь:</p>
+    {% if authorized %}
+        <h1>Добро пожаловать, {{ login }}!</h1>
+    {% else %}
+        <h2>Пожалуйста, авторизуйтесь</h2>
         <form method="post">
             <div>
-                <label for="login">Пользователь:</label>
-                <input type="text" id="login" name="login" value="{{ login or '' }}">
+                <label for="login">Имя пользователя:</label>
+                <input type="text" id="login" name="login">
             </div>
             <div>
                 <label for="password">Пароль:</label>
@@ -18,10 +21,10 @@
             {% if error %}
                 <p style="color: red;">{{ error }}</p>
             {% endif %}
-            <button type="submit">Войти</button>
-            <button type="reset">Отмена</button>
+            <div>
+                <button type="submit">Войти</button>
+                <button type="reset">Отмена</button>
+            </div>
         </form>
-    {% else %}
-        <h1>Добро пожаловать, {{ login }}!</h1>
     {% endif %}
 {% endblock %}
