@@ -120,31 +120,42 @@ def tree():
 
 
 users = [
-    {'login': 'alex', 'password': '123'},
-    {'login': 'bob', 'password': '555'}
+    {'login': 'alex', 'password': '123', 'name': 'Александр Иванов', 'gender': 'male'},
+    {'login': 'bob', 'password': '555', 'name': 'Боб Смит', 'gender': 'male'},
+    # Добавьте других пользователей
 ]
 
 @lab4.route('/lab4/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'GET':
-        if 'login' in session:
-            login = session['login']
-            authorized = True
+    error = None
+    login = ''
+    authorized = False
+
+    if request.method == 'POST':
+        login = request.form.get('login', '')
+        password = request.form.get('password', '')
+
+        # Проверка на пустые значения
+        if not login:
+            error = 'Не введён логин'
+        elif not password:
+            error = 'Не введён пароль'
         else:
-            login = ''
-            authorized = False
-        return render_template('lab4/login.html', authorized=authorized, login=login)
+            for user in users:
+                if login == user['login'] and password == user['password']:
+                    session['login'] = login
+                    session['name'] = user['name']
+                    authorized = True
+                    return redirect('/lab4/login')
 
-    login = request.form.get('login')
-    password = request.form.get('password')
+            error = 'Неверные логин и/или пароль'
 
-    for user in users:
-        if login == user['login'] and password == user['password']:
-            session['login'] = login
-            return redirect('/lab4/login')
-    error = 'Неверные логин и/или пароль'
-    return render_template('lab4/login.html', error=error, authorized=False)
+    # Проверяем, если пользователь уже авторизован
+    if 'login' in session:
+        authorized = True
+        login = session['login']
 
+    return render_template('lab4/login.html', login=login, error=error, authorized=authorized)
 
 @lab4.route('/lab4')
 def index():
