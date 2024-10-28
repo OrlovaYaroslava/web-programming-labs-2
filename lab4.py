@@ -7,6 +7,69 @@ def lab():
     return render_template('lab4/lab4.html')
 
 
+# Обработчик для суммирования
+@lab4.route('/lab4/add-form', methods=['GET'])
+def add_form():
+    return render_template('lab4/add-form.html')
+
+@lab4.route('/lab4/add', methods=['POST'])
+def add():
+    x1 = request.form.get('x1') or 0
+    x2 = request.form.get('x2') or 0
+    result = int(x1) + int(x2)
+    return render_template('lab4/result.html', operation='Суммирование', x1=x1, x2=x2, result=result, operation_sign="+")
+
+# Обработчик для умножения
+@lab4.route('/lab4/mul-form', methods=['GET'])
+def mul_form():
+    return render_template('lab4/mul-form.html')
+
+@lab4.route('/lab4/mul', methods=['POST'])
+def mul():
+    x1 = request.form.get('x1') or 1
+    x2 = request.form.get('x2') or 1
+    result = int(x1) * int(x2)
+    return render_template('lab4/result.html', operation='Умножение', x1=x1, x2=x2, result=result, operation_sign="*")
+
+# Обработчик для вычитания
+@lab4.route('/lab4/sub-form', methods=['GET'])
+def sub_form():
+    return render_template('lab4/sub-form.html')
+
+@lab4.route('/lab4/sub', methods=['POST'])
+def sub():
+    x1 = request.form.get('x1')
+    x2 = request.form.get('x2')
+
+    if not x1 or not x2:
+        error = "Оба поля должны быть заполнены!"
+        return render_template('lab4/result.html', error=error)
+    
+    result = int(x1) - int(x2)
+    return render_template('lab4/result.html', operation='Вычитание', x1=x1, x2=x2, result=result, operation_sign="-")
+
+# Обработчик для возведения в степень
+@lab4.route('/lab4/pow-form', methods=['GET'])
+def pow_form():
+    return render_template('lab4/pow-form.html')
+
+@lab4.route('/lab4/pow', methods=['POST'])
+def pow():
+    x1 = request.form.get('x1')
+    x2 = request.form.get('x2')
+
+    if not x1 or not x2:
+        error = "Оба поля должны быть заполнены!"
+        return render_template('lab4/result.html', error=error)
+    
+    if int(x1) == 0 and int(x2) == 0:
+        error = "Оба значения не могут быть нулями одновременно!"
+        return render_template('lab4/result.html', error=error)
+
+    result = int(x1) ** int(x2)
+    return render_template('lab4/result.html', operation='Возведение в степень', x1=x1, x2=x2, result=result, operation_sign="^")
+
+
 # Главная страница с формой
 @lab4.route('/lab4/div-form')
 def div_form():

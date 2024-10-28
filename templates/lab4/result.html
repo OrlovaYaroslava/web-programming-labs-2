@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block lab %}
+    Результат операции
+{% endblock %}
+
+{% block main %}
+    <h1>{{ operation }}</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% else %}
+        {% if operation_sign == "^" %}
+            <p>{{ x1 }}<sup>{{ x2 }}</sup> = {{ result }}</p>
+        {% else %}
+            <p>{{ x1 }} {{ operation_sign }} {{ x2 }} = {{ result }}</p>
+        {% endif %}
+    {% endif %}
+    <a href="/lab4">Назад</a>
+{% endblock %}

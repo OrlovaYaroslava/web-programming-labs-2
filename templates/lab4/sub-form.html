@@ -1,0 +1,21 @@
+<!-- templates/lab4/sub-form.html -->
+{% extends 'base.html' %}
+
+{% block lab %}
+    Вычитание чисел
+{% endblock %}
+
+{% block main %}
+    <h1>Вычитание чисел</h1>
+    <form method="post" action="/lab4/sub">
+        <div>
+            <label for="x1">Первое число:</label>
+            <input type="number" name="x1" id="x1">
+        </div>
+        <div>
+            <label for="x2">Второе число:</label>
+            <input type="number" name="x2" id="x2">
+        </div>
+        <button type="submit">Вычесть</button>
+    </form>
+{% endblock %}
