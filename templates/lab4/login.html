@@ -9,6 +9,7 @@
         <h1>Добро пожаловать, {{ session.name }}!</h1>
         <form action="/lab4/logout" method="post">
             <button type="submit">Выход</button>
+            <a href="/lab4/users">Список пользователей</a>
         </form>
     {% else %}
         <h1>Пожалуйста, авторизуйтесь</h1>

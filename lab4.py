@@ -157,6 +157,64 @@ def login():
 
     return render_template('lab4/login.html', login=login, error=error, authorized=authorized)
 
+
+@lab4.route('/lab4/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        name = request.form.get('name')
+
+        if not login or not password or not name:
+            error = 'Заполните все поля'
+        elif any(user['login'] == login for user in users):
+            error = 'Пользователь с таким логином уже существует'
+        else:
+            users.append({'login': login, 'password': password, 'name': name})
+            return redirect('/lab4/login')
+
+    return render_template('lab4/register.html', error=error)
+
+
+@lab4.route('/lab4/users')
+def users_list():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    return render_template('lab4/users.html', users=users)
+
+
+@lab4.route('/lab4/delete_user', methods=['POST'])
+def delete_user():
+    if 'login' in session:
+        login = session['login']
+        global users
+        users = [user for user in users if user['login'] != login]
+        session.pop('login', None)
+    return redirect('/lab4/login')
+
+
+@lab4.route('/lab4/edit_user', methods=['GET', 'POST'])
+def edit_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+
+    login = session['login']
+    user = next((user for user in users if user['login'] == login), None)
+    
+    if request.method == 'POST':
+        new_name = request.form.get('name')
+        new_password = request.form.get('password')
+
+        if user:
+            user['name'] = new_name
+            user['password'] = new_password
+        return redirect('/lab4/users')
+
+    return render_template('lab4/edit_user.html', user=user)
+
+
 @lab4.route('/lab4')
 def index():
     return render_template('lab4/index.html')

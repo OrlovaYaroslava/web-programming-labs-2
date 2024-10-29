@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h1>Редактирование пользователя</h1>
+
+    <form action="/lab4/edit_user" method="post">
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" value="{{ user.name }}">
+        <br>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" value="{{ user.password }}">
+        <br>
+
+        <button type="submit">Сохранить</button>
+    </form>
+
+    <a href="/lab4/users">Назад к списку пользователей</a>
+{% endblock %}
