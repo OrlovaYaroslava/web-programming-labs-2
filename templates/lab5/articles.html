@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <h1>Статьи</h1>
+    {% for article in articles %}
+        <h2>{{ article['title'] }}</h2>
+        <blockquote>{{ article['article_text'] | safe }}</blockquote>
+        <a href="/lab5">На главную</a>
+    {% endfor %}
+{% endblock %}

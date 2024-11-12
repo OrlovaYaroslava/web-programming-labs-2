@@ -104,3 +104,27 @@ def create():
         return redirect(url_for('lab5.lab5_home'))
 
     return render_template('lab5/create_article.html')
+
+
+@lab5.route('/lab5/list', methods=['GET'])
+def list_articles():
+    login = session.get('login')
+    if not login:
+        return redirect('/lab5/login')
+
+    conn, cur = db_connect()
+
+    # Получаем ID пользователя по логину
+    cur.execute("SELECT id FROM users WHERE login = %s", (login,))
+    user = cur.fetchone()
+
+    if user:
+        user_id = user['id']
+        # Получаем статьи, принадлежащие этому пользователю
+        cur.execute("SELECT * FROM articles WHERE user_id = %s", (user_id,))
+        articles = cur.fetchall()
+    else:
+        articles = []
+
+    db_close(conn, cur)
+    return render_template('lab5/articles.html', articles=articles)

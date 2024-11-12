@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<h3>Создание статьи</h3>
-<form method="post">
-    <div>
-        <label>Название статьи:</label>
-        <input type="text" name="title" maxlength="50" required>
-    </div>
-    <div>
-        <label>Текст статьи:</label>
-        <textarea name="article_text" required></textarea>
-    </div>
-    <div>
-        <button type="submit">Готово</button>
-    </div>
-</form>
+    <h1>Создание статьи</h1>
+    <form method="post">
+        <div>
+            <label>Название статьи:</label>
+            <input type="text" name="title" maxlength="50" required>
+        </div>
+        <div>
+            <label>Текст статьи:</label>
+            <textarea name="article_text" rows="10" required></textarea>
+        </div>
+        <div>
+            <button type="submit">Готово</button>
+        </div>
+    </form>
 {% endblock %}
