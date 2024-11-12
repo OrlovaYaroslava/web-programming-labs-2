@@ -22,10 +22,12 @@ def db_close(conn, cur):
     cur.close()
     conn.close()
 
+
 @lab5.route('/lab5')
 def lab5_home():
     user_name = session.get('login', 'Anonymous')
     return render_template('lab5/lab5.html', user_name=user_name)
+
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
@@ -53,6 +55,7 @@ def register():
 
     return render_template('lab5/register.html')
 
+
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
 def login():
     error = None
@@ -78,10 +81,12 @@ def login():
             error = "Неверный логин и/или пароль"
     return render_template('lab5/login.html', error=error)
 
+
 @lab5.route('/lab5/logout', methods=['POST'])
 def logout():
     session.pop('login', None)
     return redirect(url_for('lab5.lab5_home'))
+
 
 # Маршрут для создания статьи
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
