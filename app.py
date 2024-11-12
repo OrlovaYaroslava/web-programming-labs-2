@@ -1,4 +1,5 @@
 from flask import Flask, url_for
+import os
 from lab1 import lab1
 from lab2 import lab2
 from lab3 import lab3
@@ -12,7 +13,9 @@ app.register_blueprint(lab3)
 app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 
-app.secret_key = 'секретно-секретный секрет'
+# Чтение секретного ключа и типа базы данных из переменных окружения
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет')
+app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
 
 # Главная страница по маршрутам / и /index
 @app.route("/")
