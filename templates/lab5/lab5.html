@@ -1,4 +1,3 @@
-<!-- templates/lab5/base.html -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,7 +12,7 @@
             display: flex;
             justify-content: space-between;
         }
-        .navbar a {
+        .navbar a, .navbar form {
             margin: 0 5px;
             padding: 5px 10px;
             text-decoration: none;
@@ -21,12 +20,22 @@
             border-radius: 5px;
             color: black;
         }
-        .navbar a:hover {
+        .navbar a:hover, .navbar form button:hover {
             background-color: #add8e6;
         }
         .navbar span {
             margin-left: 10px;
             font-weight: bold;
+        }
+        .navbar form {
+            display: inline;
+        }
+        .navbar form button {
+            background: none;
+            border: none;
+            color: black;
+            font-size: 1em;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -37,8 +46,14 @@
             <a href="/lab5/create">Создать статью</a>
         </div>
         <div>
-            <a href="/lab5/login">Войти</a>
-            <a href="/lab5/register">Регистрация</a>
+            {% if user_name == "Anonymous" %}
+                <a href="/lab5/login">Войти</a>
+                <a href="/lab5/register">Регистрация</a>
+            {% else %}
+                <form action="/lab5/logout" method="post">
+                    <button type="submit">Выйти</button>
+                </form>
+            {% endif %}
             <span>{{ user_name or "Anonymous" }}</span>
         </div>
     </div>
