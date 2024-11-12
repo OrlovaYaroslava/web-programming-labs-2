@@ -24,7 +24,7 @@ def db_close(conn, cur):
 
 @lab5.route('/lab5')
 def lab5_home():
-    user_name = session.get('login', 'Anonymous') 
+    user_name = session.get('login', 'Anonymous')
     return render_template('lab5/lab5.html', user_name=user_name)
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
@@ -32,28 +32,24 @@ def register():
     if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
-        
-        # Проверка на наличие логина и пароля
+
         if not login or not password:
             error = "Заполните все поля"
             return render_template('lab5/register.html', error=error)
 
-        # Подключение к базе данных
         conn, cur = db_connect()
         
-        # Проверка, существует ли пользователь
         cur.execute("SELECT login FROM users WHERE login = %s", (login,))
         if cur.fetchone():
             db_close(conn, cur)
             error = "Такой пользователь уже существует"
             return render_template('lab5/register.html', error=error)
         
-        # Хеширование пароля и вставка нового пользователя
         password_hash = generate_password_hash(password)
         cur.execute("INSERT INTO users (login, password) VALUES (%s, %s)", (login, password_hash))
         db_close(conn, cur)
 
-        return render_template('lab5/success.html')  # Перенаправление на страницу успеха
+        return render_template('lab5/success.html')
 
     return render_template('lab5/register.html')
 
@@ -68,17 +64,13 @@ def login():
             error = "Заполните все поля"
             return render_template('lab5/login.html', error=error)
         
-        # Подключение к базе данных
         conn, cur = db_connect()
 
-        # Выполняем запрос на получение пользователя с указанным логином
         cur.execute("SELECT * FROM users WHERE login = %s", (login,))
-        user = cur.fetchone()  # Получаем одну запись в формате словаря
+        user = cur.fetchone()
 
-        # Закрываем соединение
         db_close(conn, cur)
 
-        # Проверка наличия пользователя и совпадения пароля
         if user and check_password_hash(user['password'], password):
             session['login'] = login
             return render_template('lab5/success_login.html', login=login)
@@ -88,7 +80,27 @@ def login():
 
 @lab5.route('/lab5/logout', methods=['POST'])
 def logout():
-    # Удаляем пользователя из сессии
     session.pop('login', None)
-    # Перенаправляем на главную страницу
     return redirect(url_for('lab5.lab5_home'))
+
+# Маршрут для создания статьи
+@lab5.route('/lab5/create', methods=['GET', 'POST'])
+def create():
+    if 'login' not in session:
+        return redirect(url_for('lab5.login'))
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        article_text = request.form.get('article_text')
+        
+        conn, cur = db_connect()
+
+        cur.execute("SELECT id FROM users WHERE login = %s", (session['login'],))
+        user_id = cur.fetchone()['id']
+
+        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s)", (user_id, title, article_text))
+        db_close(conn, cur)
+
+        return redirect(url_for('lab5.lab5_home'))
+
+    return render_template('lab5/create_article.html')
