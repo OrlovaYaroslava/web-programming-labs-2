@@ -96,16 +96,21 @@ def logout():
     return redirect(url_for('lab5.lab5_home'))
 
 
-# Маршрут для создания статьи
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
     if 'login' not in session:
         return redirect(url_for('lab5.login'))
 
+    error = None
     if request.method == 'POST':
         title = request.form.get('title')
         article_text = request.form.get('article_text')
         
+        # Валидация на пустые поля
+        if not title or not article_text:
+            error = "Название и текст статьи не могут быть пустыми"
+            return render_template('lab5/create_article.html', error=error)
+
         conn, cur = db_connect()
 
         cur.execute("SELECT id FROM users WHERE login = %s", (session['login'],))
@@ -116,7 +121,7 @@ def create():
 
         return redirect(url_for('lab5.lab5_home'))
 
-    return render_template('lab5/create_article.html')
+    return render_template('lab5/create_article.html', error=error)
 
 
 @lab5.route('/lab5/list', methods=['GET'])
@@ -140,4 +145,59 @@ def list_articles():
         articles = []
 
     db_close(conn, cur)
-    return render_template('lab5/articles.html', articles=articles)
+
+    # Проверяем, есть ли статьи
+    if not articles:
+        message = "У вас нет статей"
+    else:
+        message = None
+
+    return render_template('lab5/articles.html', articles=articles, message=message)
+
+
+@lab5.route('/lab5/edit/<int:article_id>', methods=['GET', 'POST'])
+def edit_article(article_id):
+    if 'login' not in session:
+        return redirect(url_for('lab5.login'))
+
+    conn, cur = db_connect()
+
+    # Получаем статью по ID и проверяем принадлежность пользователю
+    cur.execute("SELECT * FROM articles WHERE id = %s", (article_id,))
+    article = cur.fetchone()
+
+    if not article:
+        db_close(conn, cur)
+        return redirect(url_for('lab5.list_articles'))
+
+    if request.method == 'POST':
+        title = request.form.get('title')
+        article_text = request.form.get('article_text')
+        
+        # Валидация на пустые поля
+        if not title or not article_text:
+            error = "Название и текст статьи не могут быть пустыми"
+            return render_template('lab5/edit_article.html', article=article, error=error)
+
+        # Обновляем статью
+        cur.execute("UPDATE articles SET title = %s, article_text = %s WHERE id = %s", (title, article_text, article_id))
+        db_close(conn, cur)
+
+        return redirect(url_for('lab5.list_articles'))
+
+    db_close(conn, cur)
+    return render_template('lab5/edit_article.html', article=article)
+
+
+@lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
+def delete_article(article_id):
+    if 'login' not in session:
+        return redirect(url_for('lab5.login'))
+
+    conn, cur = db_connect()
+
+    # Удаляем статью, проверив принадлежность пользователю
+    cur.execute("DELETE FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
+    db_close(conn, cur)
+
+    return redirect(url_for('lab5.list_articles'))
