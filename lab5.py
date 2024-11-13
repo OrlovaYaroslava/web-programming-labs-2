@@ -197,9 +197,9 @@ def edit_article(article_id):
     conn, cur = db_connect()
     
     if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("SELECT * FROM articles WHERE user_id=%s AND user_id=(SELECT user_id FROM users WHERE login=%s)", (article_id, session['login']))
+        cur.execute("SELECT * FROM articles WHERE id=%s AND id=(SELECT id FROM users WHERE login=%s)", (article_id, session['login']))
     else:
-        cur.execute("SELECT * FROM articles WHERE user_id=? AND user_id=(SELECT user_id FROM users WHERE login=?)", (article_id, session['login']))
+        cur.execute("SELECT * FROM articles WHERE id=? AND id=(SELECT id FROM users WHERE login=?)", (article_id, session['login']))
     
     article = cur.fetchone()
 
@@ -244,9 +244,9 @@ def delete_article(article_id):
     conn, cur = db_connect()
     
     if current_app.config['DB_TYPE'] == 'postgres':
-        cur.execute("DELETE FROM articles WHERE user_id=%s AND user_id=(SELECT user_id FROM users WHERE login=%s)", (article_id, session['login']))
+        cur.execute("DELETE FROM articles WHERE id=%s AND id=(SELECT id FROM users WHERE login=%s)", (article_id, session['login']))
     else:
-        cur.execute("DELETE FROM articles WHERE user_id=? AND user_id=(SELECT user_id FROM users WHERE login=?)", (article_id, session['login']))
+        cur.execute("DELETE FROM articles WHERE id=? AND id=(SELECT id FROM users WHERE login=?)", (article_id, session['login']))
     
     db_close(conn, cur)
     return redirect(url_for('lab5.list_articles'))
