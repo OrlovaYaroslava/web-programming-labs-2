@@ -1,4 +1,4 @@
-from flask import Blueprint,request, render_template, redirect, session, url_for, current_app
+from flask import Blueprint, request, render_template, redirect, session, url_for, current_app
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -30,12 +30,18 @@ def db_close(conn, cur):
     cur.close()
     conn.close()
 
+# Функция для выполнения запросов с учетом типа базы данных
+def execute_query(cur, query, params):
+    if current_app.config['DB_TYPE'] == 'postgres':
+        cur.execute(query, params)
+    else:
+        query = query.replace('%s', '?')
+        cur.execute(query, params)
 
 @lab5.route('/lab5')
 def lab5_home():
     user_name = session.get('login', 'Anonymous')
     return render_template('lab5/lab5.html', user_name=user_name)
-
 
 @lab5.route('/lab5/register', methods=['GET', 'POST'])
 def register():
@@ -49,20 +55,19 @@ def register():
 
         conn, cur = db_connect()
         
-        cur.execute("SELECT login FROM users WHERE login = %s", (login,))
+        execute_query(cur, "SELECT login FROM users WHERE login = %s", (login,))
         if cur.fetchone():
             db_close(conn, cur)
             error = "Такой пользователь уже существует"
             return render_template('lab5/register.html', error=error)
         
         password_hash = generate_password_hash(password)
-        cur.execute("INSERT INTO users (login, password) VALUES (%s, %s)", (login, password_hash))
+        execute_query(cur, "INSERT INTO users (login, password) VALUES (%s, %s)", (login, password_hash))
         db_close(conn, cur)
 
         return render_template('lab5/success.html')
 
     return render_template('lab5/register.html')
-
 
 @lab5.route('/lab5/login', methods=['GET', 'POST'])
 def login():
@@ -77,7 +82,7 @@ def login():
         
         conn, cur = db_connect()
 
-        cur.execute("SELECT * FROM users WHERE login = %s", (login,))
+        execute_query(cur, "SELECT * FROM users WHERE login = %s", (login,))
         user = cur.fetchone()
 
         db_close(conn, cur)
@@ -89,12 +94,10 @@ def login():
             error = "Неверный логин и/или пароль"
     return render_template('lab5/login.html', error=error)
 
-
 @lab5.route('/lab5/logout', methods=['POST'])
 def logout():
     session.pop('login', None)
     return redirect(url_for('lab5.lab5_home'))
-
 
 @lab5.route('/lab5/create', methods=['GET', 'POST'])
 def create():
@@ -109,10 +112,10 @@ def create():
 
         conn, cur = db_connect()
 
-        cur.execute("SELECT id FROM users WHERE login = %s", (session['login'],))
+        execute_query(cur, "SELECT id FROM users WHERE login = %s", (session['login'],))
         user_id = cur.fetchone()['id']
 
-        cur.execute("""
+        execute_query(cur, """
             INSERT INTO articles (user_id, title, article_text, is_favorite, is_public)
             VALUES (%s, %s, %s, %s, %s)
         """, (user_id, title, article_text, is_favorite, is_public))
@@ -122,21 +125,20 @@ def create():
 
     return render_template('lab5/create_article.html')
 
-
 @lab5.route('/lab5/list', methods=['GET'])
 def list_articles():
     login = session.get('login')
     if not login:
-        return redirect('/lab5/login')
+        return redirect(url_for('lab5.login'))
 
     conn, cur = db_connect()
 
-    cur.execute("SELECT id FROM users WHERE login = %s", (login,))
+    execute_query(cur, "SELECT id FROM users WHERE login = %s", (login,))
     user = cur.fetchone()
 
     if user:
         user_id = user['id']
-        cur.execute("""
+        execute_query(cur, """
             SELECT * FROM articles 
             WHERE user_id = %s 
             ORDER BY is_favorite DESC
@@ -148,19 +150,15 @@ def list_articles():
     db_close(conn, cur)
     return render_template('lab5/articles.html', articles=articles)
 
-
 @lab5.route('/lab5/public_articles', methods=['GET'])
-def public_articles():
+def show_public_articles():
     conn, cur = db_connect()
-    
-    # Получаем все статьи с флагом is_public = True
-    cur.execute("SELECT * FROM articles WHERE is_public = TRUE ORDER BY is_favorite DESC")
-    public_articles = cur.fetchall()
+
+    execute_query(cur, "SELECT * FROM articles WHERE is_public = TRUE ORDER BY is_favorite DESC")
+    articles = cur.fetchall()
 
     db_close(conn, cur)
-
-    return render_template('lab5/public_articles.html', articles=public_articles)
-
+    return render_template('lab5/public_articles.html', articles=articles)
 
 @lab5.route('/lab5/edit_article/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):
@@ -169,8 +167,7 @@ def edit_article(article_id):
 
     conn, cur = db_connect()
 
-    # Получаем статью для редактирования
-    cur.execute("SELECT * FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
+    execute_query(cur, "SELECT * FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
     article = cur.fetchone()
 
     if not article:
@@ -187,8 +184,7 @@ def edit_article(article_id):
             error = "Заполните все поля"
             return render_template('lab5/edit_article.html', article=article, error=error)
 
-        # Обновляем статью в базе данных
-        cur.execute("""
+        execute_query(cur, """
             UPDATE articles
             SET title = %s, article_text = %s, is_favorite = %s, is_public = %s
             WHERE id = %s
@@ -200,7 +196,6 @@ def edit_article(article_id):
     db_close(conn, cur)
     return render_template('lab5/edit_article.html', article=article)
 
-
 @lab5.route('/lab5/delete/<int:article_id>', methods=['POST'])
 def delete_article(article_id):
     if 'login' not in session:
@@ -208,30 +203,16 @@ def delete_article(article_id):
 
     conn, cur = db_connect()
 
-    # Удаляем статью, проверив принадлежность пользователю
-    cur.execute("DELETE FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
+    execute_query(cur, "DELETE FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
     db_close(conn, cur)
 
     return redirect(url_for('lab5.list_articles'))
 
-
 @lab5.route('/lab5/users', methods=['GET'])
 def list_users():
     conn, cur = db_connect()
-    # Получаем всех пользователей, только логины
-    cur.execute("SELECT login FROM users")
+    execute_query(cur, "SELECT login FROM users")
     users = cur.fetchall()
     db_close(conn, cur)
 
     return render_template('lab5/users.html', users=users)
-
-
-@lab5.route('/lab5/public_articles', methods=['GET'])
-def show_public_articles():
-    conn, cur = db_connect()
-
-    cur.execute("SELECT * FROM articles WHERE is_public = TRUE")
-    articles = cur.fetchall()
-
-    db_close(conn, cur)
-    return render_template('lab5/public_articles.html', articles=articles)
