@@ -8,11 +8,16 @@
             <input type="text" name="title" maxlength="50" required>
         </div>
         <div>
-            <label>Текст статьи:</label>
-            <textarea name="article_text" rows="10" required></textarea>
+            <label>Содержание статьи:</label>
+            <textarea name="article_text" required></textarea>
         </div>
         <div>
-            <button type="submit">Готово</button>
+            <label><input type="checkbox" name="is_favorite"> Сделать статью любимой</label>
         </div>
+        <div>
+            <label><input type="checkbox" name="is_public"> Сделать статью публичной</label>
+        </div>
+        <button type="submit">Готово</button>
     </form>
+    
 {% endblock %}

@@ -101,27 +101,26 @@ def create():
     if 'login' not in session:
         return redirect(url_for('lab5.login'))
 
-    error = None
     if request.method == 'POST':
         title = request.form.get('title')
         article_text = request.form.get('article_text')
-        
-        # Валидация на пустые поля
-        if not title or not article_text:
-            error = "Название и текст статьи не могут быть пустыми"
-            return render_template('lab5/create_article.html', error=error)
+        is_favorite = request.form.get('is_favorite') is not None
+        is_public = request.form.get('is_public') is not None
 
         conn, cur = db_connect()
 
         cur.execute("SELECT id FROM users WHERE login = %s", (session['login'],))
         user_id = cur.fetchone()['id']
 
-        cur.execute("INSERT INTO articles (user_id, title, article_text) VALUES (%s, %s, %s)", (user_id, title, article_text))
+        cur.execute("""
+            INSERT INTO articles (user_id, title, article_text, is_favorite, is_public)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (user_id, title, article_text, is_favorite, is_public))
         db_close(conn, cur)
 
         return redirect(url_for('lab5.lab5_home'))
 
-    return render_template('lab5/create_article.html', error=error)
+    return render_template('lab5/create_article.html')
 
 
 @lab5.route('/lab5/list', methods=['GET'])
@@ -132,57 +131,70 @@ def list_articles():
 
     conn, cur = db_connect()
 
-    # Получаем ID пользователя по логину
     cur.execute("SELECT id FROM users WHERE login = %s", (login,))
     user = cur.fetchone()
 
     if user:
         user_id = user['id']
-        # Получаем статьи, принадлежащие этому пользователю
-        cur.execute("SELECT * FROM articles WHERE user_id = %s", (user_id,))
+        cur.execute("""
+            SELECT * FROM articles 
+            WHERE user_id = %s 
+            ORDER BY is_favorite DESC
+        """, (user_id,))
         articles = cur.fetchall()
     else:
         articles = []
 
     db_close(conn, cur)
-
-    # Проверяем, есть ли статьи
-    if not articles:
-        message = "У вас нет статей"
-    else:
-        message = None
-
-    return render_template('lab5/articles.html', articles=articles, message=message)
+    return render_template('lab5/articles.html', articles=articles)
 
 
-@lab5.route('/lab5/edit/<int:article_id>', methods=['GET', 'POST'])
+@lab5.route('/lab5/public_articles', methods=['GET'])
+def public_articles():
+    conn, cur = db_connect()
+    
+    # Получаем все статьи с флагом is_public = True
+    cur.execute("SELECT * FROM articles WHERE is_public = TRUE ORDER BY is_favorite DESC")
+    public_articles = cur.fetchall()
+
+    db_close(conn, cur)
+
+    return render_template('lab5/public_articles.html', articles=public_articles)
+
+
+@lab5.route('/lab5/edit_article/<int:article_id>', methods=['GET', 'POST'])
 def edit_article(article_id):
     if 'login' not in session:
         return redirect(url_for('lab5.login'))
 
     conn, cur = db_connect()
 
-    # Получаем статью по ID и проверяем принадлежность пользователю
-    cur.execute("SELECT * FROM articles WHERE id = %s", (article_id,))
+    # Получаем статью для редактирования
+    cur.execute("SELECT * FROM articles WHERE id = %s AND user_id = (SELECT id FROM users WHERE login = %s)", (article_id, session['login']))
     article = cur.fetchone()
 
     if not article:
         db_close(conn, cur)
-        return redirect(url_for('lab5.list_articles'))
+        return "Статья не найдена или у вас нет прав для ее редактирования", 403
 
     if request.method == 'POST':
         title = request.form.get('title')
         article_text = request.form.get('article_text')
-        
-        # Валидация на пустые поля
+        is_favorite = bool(request.form.get('is_favorite'))
+        is_public = bool(request.form.get('is_public'))
+
         if not title or not article_text:
-            error = "Название и текст статьи не могут быть пустыми"
+            error = "Заполните все поля"
             return render_template('lab5/edit_article.html', article=article, error=error)
 
-        # Обновляем статью
-        cur.execute("UPDATE articles SET title = %s, article_text = %s WHERE id = %s", (title, article_text, article_id))
-        db_close(conn, cur)
+        # Обновляем статью в базе данных
+        cur.execute("""
+            UPDATE articles
+            SET title = %s, article_text = %s, is_favorite = %s, is_public = %s
+            WHERE id = %s
+        """, (title, article_text, is_favorite, is_public, article_id))
 
+        db_close(conn, cur)
         return redirect(url_for('lab5.list_articles'))
 
     db_close(conn, cur)
@@ -201,3 +213,25 @@ def delete_article(article_id):
     db_close(conn, cur)
 
     return redirect(url_for('lab5.list_articles'))
+
+
+@lab5.route('/lab5/users', methods=['GET'])
+def list_users():
+    conn, cur = db_connect()
+    # Получаем всех пользователей, только логины
+    cur.execute("SELECT login FROM users")
+    users = cur.fetchall()
+    db_close(conn, cur)
+
+    return render_template('lab5/users.html', users=users)
+
+
+@lab5.route('/lab5/public_articles', methods=['GET'])
+def show_public_articles():
+    conn, cur = db_connect()
+
+    cur.execute("SELECT * FROM articles WHERE is_public = TRUE")
+    articles = cur.fetchall()
+
+    db_close(conn, cur)
+    return render_template('lab5/public_articles.html', articles=articles)
