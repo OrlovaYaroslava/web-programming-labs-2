@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify, session, render_template
 
 lab6 = Blueprint('lab6', __name__)
 
-# Список офисов
-offices = [{"number": i, "tenant": ""} for i in range(1, 11)]
+# Список офисов с добавлением стоимости аренды
+offices = [{"number": i, "tenant": "", "price": 900 + i * 3} for i in range(1, 11)]
 
 @lab6.route('/lab6/')
 def main():

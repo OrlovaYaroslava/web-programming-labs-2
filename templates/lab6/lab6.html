@@ -18,6 +18,8 @@ function getOfficeList() {
     .then(data => {
         const ul = document.getElementById("office-list");
         ul.innerHTML = ""; // Очистка списка перед обновлением
+        let totalCost = 0; // Общая стоимость аренды для текущего пользователя
+
         data.result.forEach(office => {
             const li = document.createElement("li");
             li.classList.add("office-item");
@@ -29,6 +31,12 @@ function getOfficeList() {
             const buttonsDiv = document.createElement("div");
             buttonsDiv.classList.add("buttons-container");
 
+            // Стоимость офиса перед кнопками
+            const priceSpan = document.createElement("span");
+            priceSpan.innerText = `Стоимость: ${office.price} руб.`;
+            priceSpan.classList.add("price");
+            buttonsDiv.appendChild(priceSpan);
+
             // Кнопка "Зарезервировать"
             const bookingButton = document.createElement("button");
             bookingButton.innerText = "Зарезервировать";
@@ -38,20 +46,21 @@ function getOfficeList() {
             // Кнопка "Освободить"
             const cancelButton = document.createElement("button");
             cancelButton.innerText = "Освободить";
-            cancelButton.onclick = () => {
-                if (!office.tenant) {
-                    alert("Кабинет уже свободен!");
-                } else if (office.tenant !== "{{ session.get('login', '') }}") {
-                    alert("Вы не можете снять аренду чужого офиса.");
-                } else {
-                    cancellation(office.number);
-                }
-            };
+            cancelButton.onclick = () => cancellation(office.number);
             buttonsDiv.appendChild(cancelButton);
 
             li.appendChild(buttonsDiv);
             ul.appendChild(li);
+
+            // Подсчет общей стоимости для арендатора
+            if (office.tenant === "{{ session.get('login', '') }}") {
+                totalCost += office.price;
+            }
         });
+
+        // Отображение общей стоимости
+        const totalCostElement = document.getElementById("total-cost");
+        totalCostElement.innerText = `Общая стоимость аренды: ${totalCost} руб.`;
     });
 }
 
@@ -105,41 +114,66 @@ document.addEventListener("DOMContentLoaded", getOfficeList);
 </script>
 <style>
     ul#office-list {
-        list-style-type: none;
+        list-style: none;
         padding: 0;
     }
-
     ul#office-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 15px; /* Отступ между строками */
         padding: 10px;
-        display: flex;
-        justify-content: space-between; /* Разделение текста и кнопок */
-        align-items: center;
         background-color: #f9f9f9;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
-
     ul#office-list li span {
-        flex-grow: 1; /* Текст занимает всё доступное пространство */
+        font-size: 16px;
+        font-weight: bold;
+        margin-right: 20px;
     }
-
-    ul#office-list li .buttons-container button {
-        margin-left: 10px; /* Отступ между кнопками */
-        padding: 5px 10px;
-        background-color: #4CAF50;
-        color: white;
+    ul#office-list li .buttons-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    ul#office-list li button {
+        padding: 5px 15px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
     }
-
-    ul#office-list li .buttons-container button:nth-child(2) {
-        background-color: #f44336; /* Красная кнопка "Освободить" */
+    ul#office-list li button:nth-child(2) {
+        background-color: #4CAF50;
+        color: white;
     }
-
-    ul#office-list li .buttons-container button:hover {
-        opacity: 0.8;
+    ul#office-list li button:nth-child(2):hover {
+        background-color: #45a049;
+    }
+    ul#office-list li button:nth-child(3) {
+        background-color: #f44336;
+        color: white;
+    }
+    ul#office-list li button:nth-child(3):hover {
+        background-color: #e53935;
+    }
+    ul#office-list li .price {
+        font-size: 14px;
+        color: #555;
+        font-weight: normal;
+        margin-right: 15px;
+    }
+    #total-cost {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 </style>
 {% endblock %}
@@ -147,4 +181,5 @@ document.addEventListener("DOMContentLoaded", getOfficeList);
 {% block main %}
 <h1>Список кабинетов</h1>
 <ul id="office-list"></ul>
+<p id="total-cost">Общая стоимость аренды: 0 руб.</p>
 {% endblock %}
