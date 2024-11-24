@@ -20,19 +20,36 @@ function getOfficeList() {
         ul.innerHTML = ""; // Очистка списка перед обновлением
         data.result.forEach(office => {
             const li = document.createElement("li");
-            li.innerText = `Кабинет ${office.number}: ${office.tenant || "свободен"}`;
+            li.classList.add("office-item");
 
-            if (!office.tenant) {
-                const bookingButton = document.createElement("button");
-                bookingButton.innerText = "Зарезервировать";
-                bookingButton.onclick = () => booking(office.number);
-                li.appendChild(bookingButton);
-            } else if (office.tenant === "{{ user_name }}") {
-                const cancelButton = document.createElement("button");
-                cancelButton.innerText = "Освободить";
-                cancelButton.onclick = () => cancellation(office.number);
-                li.appendChild(cancelButton);
-            }
+            const textSpan = document.createElement("span");
+            textSpan.innerText = `Кабинет ${office.number}: ${office.tenant || "свободен"}`;
+            li.appendChild(textSpan);
+
+            const buttonsDiv = document.createElement("div");
+            buttonsDiv.classList.add("buttons-container");
+
+            // Кнопка "Зарезервировать"
+            const bookingButton = document.createElement("button");
+            bookingButton.innerText = "Зарезервировать";
+            bookingButton.onclick = () => booking(office.number);
+            buttonsDiv.appendChild(bookingButton);
+
+            // Кнопка "Освободить"
+            const cancelButton = document.createElement("button");
+            cancelButton.innerText = "Освободить";
+            cancelButton.onclick = () => {
+                if (!office.tenant) {
+                    alert("Кабинет уже свободен!");
+                } else if (office.tenant !== "{{ session.get('login', '') }}") {
+                    alert("Вы не можете снять аренду чужого офиса.");
+                } else {
+                    cancellation(office.number);
+                }
+            };
+            buttonsDiv.appendChild(cancelButton);
+
+            li.appendChild(buttonsDiv);
             ul.appendChild(li);
         });
     });
@@ -87,15 +104,28 @@ function cancellation(officeNumber) {
 document.addEventListener("DOMContentLoaded", getOfficeList);
 </script>
 <style>
+    ul#office-list {
+        list-style-type: none;
+        padding: 0;
+    }
+
     ul#office-list li {
         margin-bottom: 15px; /* Отступ между строками */
         padding: 10px;
+        display: flex;
+        justify-content: space-between; /* Разделение текста и кнопок */
+        align-items: center;
         background-color: #f9f9f9;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
-    ul#office-list li button {
-        margin-left: 10px; /* Отступ для кнопок */
+
+    ul#office-list li span {
+        flex-grow: 1; /* Текст занимает всё доступное пространство */
+    }
+
+    ul#office-list li .buttons-container button {
+        margin-left: 10px; /* Отступ между кнопками */
         padding: 5px 10px;
         background-color: #4CAF50;
         color: white;
@@ -103,8 +133,13 @@ document.addEventListener("DOMContentLoaded", getOfficeList);
         border-radius: 5px;
         cursor: pointer;
     }
-    ul#office-list li button:hover {
-        background-color: #45a049;
+
+    ul#office-list li .buttons-container button:nth-child(2) {
+        background-color: #f44336; /* Красная кнопка "Освободить" */
+    }
+
+    ul#office-list li .buttons-container button:hover {
+        opacity: 0.8;
     }
 </style>
 {% endblock %}

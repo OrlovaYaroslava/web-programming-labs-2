@@ -54,6 +54,12 @@ def api():
         office_number = data.get('params')
         for office in offices:
             if office['number'] == office_number:
+                if not office['tenant']:
+                    return jsonify({
+                        "jsonrpc": "2.0",
+                        "error": {"code": 2, "message": "Нельзя снять бронь с неарендованного офиса"},
+                        "id": request_id
+                    })
                 if office['tenant'] != login:
                     return jsonify({
                         "jsonrpc": "2.0",
