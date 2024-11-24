@@ -215,9 +215,7 @@ def edit_user():
     return render_template('lab4/edit_user.html', user=user)
 
 
-@lab4.route('/lab4')
-def index():
-    return render_template('lab4/index.html')
+
 
 
 @lab4.route('/lab4/logout', methods=['POST'])
