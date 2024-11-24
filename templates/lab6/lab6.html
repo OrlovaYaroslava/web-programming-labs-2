@@ -25,7 +25,8 @@ function getOfficeList() {
             li.classList.add("office-item");
 
             const textSpan = document.createElement("span");
-            textSpan.innerText = `Кабинет ${office.number}: ${office.tenant || "свободен"}`;
+            const userColor = office.tenant ? (office.tenant === "{{ session.get('login', '') }}" ? "current-user" : "other-user") : "no-user";
+            textSpan.innerHTML = `Кабинет ${office.number}: <span class="${userColor}">${office.tenant || "свободен"}</span>`;
             li.appendChild(textSpan);
 
             const buttonsDiv = document.createElement("div");
@@ -113,19 +114,33 @@ function cancellation(officeNumber) {
 document.addEventListener("DOMContentLoaded", getOfficeList);
 </script>
 <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f7f6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
     ul#office-list {
         list-style: none;
         padding: 0;
+        margin: 0 auto;
+        width: 80%;
     }
     ul#office-list li {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 15px; /* Отступ между строками */
-        padding: 10px;
-        background-color: #f9f9f9;
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: #fff;
         border: 1px solid #ccc;
-        border-radius: 5px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     ul#office-list li span {
         font-size: 16px;
@@ -174,6 +189,19 @@ document.addEventListener("DOMContentLoaded", getOfficeList);
         background-color: #f2f2f2;
         border: 1px solid #ccc;
         border-radius: 5px;
+        text-align: center;
+    }
+    /* Цвета пользователей */
+    .current-user {
+        color: green;
+        font-weight: bold;
+    }
+    .other-user {
+        color: red;
+        font-weight: bold;
+    }
+    .no-user {
+        color: #999;
     }
 </style>
 {% endblock %}
