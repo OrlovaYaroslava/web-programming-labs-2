@@ -56,3 +56,16 @@ def get_film(id):
         return jsonify(films[adjusted_id])
     else:
         return jsonify({"error": "Фильм не найден"}), 404
+
+
+# Маршрут для удаления фильма по его ID
+@lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
+def delete_film(id):
+    # Учитываем смещение на 1
+    adjusted_id = id - 1
+    if 0 <= adjusted_id < len(films):
+        del films[adjusted_id]
+        return '', 204  # Возвращаем пустое тело и код 204 No Content
+    else:
+        return jsonify({"error": "Фильм не найден"}), 404
+
