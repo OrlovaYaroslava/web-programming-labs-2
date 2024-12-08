@@ -57,7 +57,6 @@ def get_film(id):
     else:
         return jsonify({"error": "Фильм не найден"}), 404
 
-
 # Маршрут для удаления фильма по его ID
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def delete_film(id):
@@ -69,7 +68,6 @@ def delete_film(id):
     else:
         return jsonify({"error": "Фильм не найден"}), 404
 
-
 # Маршрут для редактирования фильма по его ID
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
@@ -77,15 +75,19 @@ def put_film(id):
     adjusted_id = id - 1
     if 0 <= adjusted_id < len(films):
         film = request.get_json()
+        if not film.get('description'):
+            return jsonify({"description": "Описание не может быть пустым"}), 400
         films[adjusted_id] = film
         return jsonify(films[adjusted_id])
     else:
         return jsonify({"error": "Фильм не найден"}), 404
 
-
 # Маршрут для добавления нового фильма
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def post_film():
     film = request.get_json()
+    if not film.get('description'):
+        return jsonify({"description": "Описание не может быть пустым"}), 400
     films.append(film)
-    return jsonify({"id": len(films)}), 201  # Возвращаем ID нового фильма и код 201 Created
+    new_film_id = len(films)
+    return jsonify({"id": new_film_id}), 201  # Возвращаем ID нового фильма и код 201 Created

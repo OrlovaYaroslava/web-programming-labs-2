@@ -61,6 +61,7 @@ function deleteFilm(id, title) {
 
 function showModal() {
     document.getElementById('add-film-modal').style.display = 'block';
+    document.getElementById('error-message').innerText = ''; // Очистка сообщения об ошибке
 }
 
 function hideModal() {
@@ -113,9 +114,20 @@ function sendFilm() {
         },
         body: JSON.stringify(film)
     })
-    .then(function() {
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.json().then(error => {
+                throw new Error(error.description);
+            });
+        }
+    })
+    .then(data => {
         fillFilmList();
         hideModal();
     })
-    .catch(error => console.error('Ошибка:', error));
+    .catch(error => {
+        document.getElementById('error-message').innerText = error.message;
+    });
 }
