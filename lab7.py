@@ -71,10 +71,12 @@ def delete_film(id):
 # Маршрут для редактирования фильма по его ID
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    # Учитываем смещение на 1
     adjusted_id = id - 1
     if 0 <= adjusted_id < len(films):
         film = request.get_json()
+        # Проверка на пустое оригинальное имя
+        if not film.get('title') and film.get('title_ru'):
+            film['title'] = film['title_ru']
         if not film.get('description'):
             return jsonify({"description": "Описание не может быть пустым"}), 400
         films[adjusted_id] = film
@@ -86,6 +88,9 @@ def put_film(id):
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def post_film():
     film = request.get_json()
+    # Проверка на пустое оригинальное имя
+    if not film.get('title') and film.get('title_ru'):
+        film['title'] = film['title_ru']
     if not film.get('description'):
         return jsonify({"description": "Описание не может быть пустым"}), 400
     films.append(film)
