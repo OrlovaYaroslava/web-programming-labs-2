@@ -5,8 +5,22 @@
 {% endblock %}
 
 {% block script %}
+<script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
 {% endblock %}
 
 {% block main %}
-
+<h2>Список фильмов</h2>
+<table id="film-table">
+    <thead>
+        <tr>
+            <th colspan="2">Название</th>
+            <th>Год</th>
+            <th>Действие</th>
+        </tr>
+    </thead>
+    <tbody id="film-list">
+        <!-- Здесь будут добавляться строки с фильмами -->
+    </tbody>
+</table>
+<button id="add-film-button">Добавить фильм</button>
 {% endblock %}
