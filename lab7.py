@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify, session, render_template, current_app
+from datetime import datetime
 import psycopg2
 import sqlite3
 from os import path
@@ -42,6 +43,28 @@ films = [
     }
 ]
 
+def validate_film(film):
+    current_year = datetime.now().year
+
+    # Проверка названий
+    if not film.get('title') and not film.get('title_ru'):
+        return "Либо оригинальное, либо русское название должно быть указано."
+    if not film.get('title_ru'):
+        return "Русское название должно быть указано."
+
+    # Проверка года
+    if not (1895 <= film.get('year', 0) <= current_year):
+        return f"Год должен быть в диапазоне от 1895 до {current_year}."
+
+    # Проверка описания
+    if not film.get('description'):
+        return "Описание не может быть пустым."
+    if len(film.get('description', '')) > 2000:
+        return "Описание не может быть длиннее 2000 символов."
+
+    return None  # Если ошибок нет
+
+
 # Маршрут для получения всех фильмов
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
@@ -74,11 +97,9 @@ def put_film(id):
     adjusted_id = id - 1
     if 0 <= adjusted_id < len(films):
         film = request.get_json()
-        # Проверка на пустое оригинальное имя
-        if not film.get('title') and film.get('title_ru'):
-            film['title'] = film['title_ru']
-        if not film.get('description'):
-            return jsonify({"description": "Описание не может быть пустым"}), 400
+        error = validate_film(film)
+        if error:
+            return jsonify({"error": error}), 400
         films[adjusted_id] = film
         return jsonify(films[adjusted_id])
     else:
@@ -88,11 +109,9 @@ def put_film(id):
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def post_film():
     film = request.get_json()
-    # Проверка на пустое оригинальное имя
-    if not film.get('title') and film.get('title_ru'):
-        film['title'] = film['title_ru']
-    if not film.get('description'):
-        return jsonify({"description": "Описание не может быть пустым"}), 400
+    error = validate_film(film)
+    if error:
+        return jsonify({"error": error}), 400
     films.append(film)
     new_film_id = len(films)
     return jsonify({"id": new_film_id}), 201  # Возвращаем ID нового фильма и код 201 Created
