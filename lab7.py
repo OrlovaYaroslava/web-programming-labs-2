@@ -83,3 +83,9 @@ def put_film(id):
         return jsonify({"error": "Фильм не найден"}), 404
 
 
+# Маршрут для добавления нового фильма
+@lab7.route('/lab7/rest-api/films/', methods=['POST'])
+def post_film():
+    film = request.get_json()
+    films.append(film)
+    return jsonify({"id": len(films)}), 201  # Возвращаем ID нового фильма и код 201 Created
