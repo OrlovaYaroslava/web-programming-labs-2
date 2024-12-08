@@ -22,6 +22,9 @@ function fillFilmList() {
 
                 let editButton = document.createElement('button');
                 editButton.innerText = 'Редактировать';
+                editButton.onclick = function() {
+                    editFilm(i + 1);
+                };
                 let deleteButton = document.createElement('button');
                 deleteButton.innerText = 'Удалить';
                 deleteButton.onclick = function() {
@@ -77,7 +80,22 @@ function addFilm() {
     showModal();
 }
 
+function editFilm(id) {
+    fetch(`/lab7/rest-api/films/${id}`)
+        .then(response => response.json())
+        .then(film => {
+            document.getElementById('id').value = id;
+            document.getElementById('title').value = film.title;
+            document.getElementById('title-ru').value = film.title_ru;
+            document.getElementById('year').value = film.year;
+            document.getElementById('description').value = film.description;
+            showModal();
+        })
+        .catch(error => console.error('Ошибка:', error));
+}
+
 function sendFilm() {
+    const id = document.getElementById('id').value;
     const film = {
         title: document.getElementById('title').value,
         title_ru: document.getElementById('title-ru').value,
@@ -85,8 +103,8 @@ function sendFilm() {
         description: document.getElementById('description').value
     };
 
-    const url = '/lab7/rest-api/films/';
-    const method = 'POST';
+    const url = id ? `/lab7/rest-api/films/${id}` : '/lab7/rest-api/films/';
+    const method = id ? 'PUT' : 'POST';
 
     fetch(url, {
         method: method,
