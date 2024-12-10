@@ -1,0 +1,23 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>Добавить новый рецепт</h2>
+    <form method="POST">
+        <label for="name">Название рецепта:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="description">Описание:</label><br>
+        <textarea id="description" name="description" required></textarea><br><br>
+
+        <label for="ingredients">Ингредиенты (через запятую):</label><br>
+        <input type="text" id="ingredients" name="ingredients" required><br><br>
+
+        <label for="steps">Шаги приготовления:</label><br>
+        <textarea id="steps" name="steps" required></textarea><br><br>
+
+        <label for="photo_url">Ссылка на фото (если есть):</label><br>
+        <input type="text" id="photo_url" name="photo_url" placeholder="Введите ссылку на фото (например, URL-адрес изображения)"><br><br>   
+
+        <button type="submit">Добавить рецепт</button>
+    </form>
+{% endblock %}

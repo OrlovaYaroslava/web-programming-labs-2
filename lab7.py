@@ -49,8 +49,10 @@ def validate_film(film):
     # Проверка названий
     if not film.get('title') and not film.get('title_ru'):
         return "Либо оригинальное, либо русское название должно быть указано."
-    if not film.get('title_ru'):
-        return "Русское название должно быть указано."
+
+    # Если оригинальное название пустое, но русское задано, используем русское
+    if not film.get('title') and film.get('title_ru'):
+        film['title'] = film['title_ru']
 
     # Проверка года
     if not (1895 <= film.get('year', 0) <= current_year):

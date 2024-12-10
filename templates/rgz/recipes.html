@@ -1,0 +1,14 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>Все рецепты</h2>
+    <ul>
+        {% for recipe in recipes %}
+            <li>
+                <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
+            </li>
+        {% else %}
+            <li>Рецепты не найдены.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

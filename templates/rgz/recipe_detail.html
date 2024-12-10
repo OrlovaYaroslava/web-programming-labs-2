@@ -1,0 +1,10 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>{{ recipe.name }}</h2>
+    <img src="{{ recipe.photo_url }}" alt="Фото рецепта" style="max-width: 300px;">
+    <p><strong>Описание:</strong> {{ recipe.description }}</p>
+    <p><strong>Ингредиенты:</strong> {{ recipe.ingredients }}</p>
+    <p><strong>Шаги приготовления:</strong> {{ recipe.steps }}</p>
+    <a href="/rgz/">Вернуться на главную</a>
+{% endblock %}
