@@ -2,33 +2,36 @@ document.addEventListener('DOMContentLoaded', function() {
     fillFilmList();
 });
 
+// Функция для заполнения списка фильмов на странице
 function fillFilmList() {
     fetch('/lab7/rest-api/films/')
         .then(response => response.json())
         .then(films => {
             let tbody = document.getElementById('film-list');
-            tbody.innerHTML = '';
+            tbody.innerHTML = '';  // Очистка таблицы
 
-            for (let i = 0; i < films.length; i++) {
+            let fragment = document.createDocumentFragment();  // Создание фрагмента для оптимизации DOM
+
+            films.forEach(film => {
                 let tr = document.createElement('tr');
                 let tdTitleRus = document.createElement('td');
                 let tdTitle = document.createElement('td');
                 let tdYear = document.createElement('td');
                 let tdActions = document.createElement('td');
 
-                tdTitleRus.innerText = films[i].title_ru;
-                tdTitle.innerHTML = films[i].title ? `<i>(${films[i].title})</i>` : '';
-                tdYear.innerText = films[i].year;
+                tdTitleRus.innerText = film.title_ru;
+                tdTitle.innerHTML = film.title ? `<i>(${film.title})</i>` : ''; // Проверка наличия оригинального названия
+                tdYear.innerText = film.year;
 
                 let editButton = document.createElement('button');
                 editButton.innerText = 'Редактировать';
                 editButton.onclick = function() {
-                    editFilm(i + 1); // Учитываем ID с смещением 1
+                    editFilm(film.id); // Используем настоящий ID
                 };
                 let deleteButton = document.createElement('button');
                 deleteButton.innerText = 'Удалить';
                 deleteButton.onclick = function() {
-                    deleteFilm(i + 1, films[i].title_ru); // Учитываем ID с смещением 1
+                    deleteFilm(film.id, film.title_ru); // Используем настоящий ID
                 };
 
                 tdActions.append(editButton);
@@ -39,12 +42,15 @@ function fillFilmList() {
                 tr.append(tdYear);
                 tr.append(tdActions);
 
-                tbody.append(tr);
-            }
+                fragment.append(tr);  // Добавление строки в фрагмент
+            });
+
+            tbody.append(fragment);  // Добавление фрагмента в DOM
         })
-        .catch(error => console.error('Ошибка:', error));
+        .catch(error => console.error('Ошибка при загрузке фильмов:', error));
 }
 
+// Функция для отправки данных фильма (добавление или редактирование)
 function sendFilm() {
     const id = document.getElementById('id').value;
     const film = {
@@ -75,14 +81,27 @@ function sendFilm() {
     .then(data => {
         fillFilmList();
         hideModal();
+        showErrorMessage('Фильм успешно добавлен/отредактирован!', 'success');
     })
     .catch(error => {
-        const errorMessage = document.getElementById('error-message');
-        errorMessage.innerText = error.message;
-        errorMessage.style.display = 'block';
+        showErrorMessage(error.message, 'error');
     });
 }
 
+// Функция для отображения сообщений об ошибках или успехе
+function showErrorMessage(message, type) {
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.innerText = message;
+    errorMessage.style.display = 'block';
+    errorMessage.style.color = type === 'error' ? 'red' : 'green';
+    
+    // Скрыть сообщение через 5 секунд
+    setTimeout(() => {
+        errorMessage.style.display = 'none';
+    }, 5000);
+}
+
+// Функция для удаления фильма
 function deleteFilm(id, title) {
     if (!confirm(`Вы точно хотите удалить фильм "${title}"?`)) {
         return;
@@ -98,6 +117,7 @@ function deleteFilm(id, title) {
             });
         }
         fillFilmList();
+        showErrorMessage(`Фильм "${title}" успешно удалён!`, 'success');
     })
     .catch(error => {
         console.error('Ошибка:', error.message);
@@ -105,6 +125,7 @@ function deleteFilm(id, title) {
     });
 }
 
+// Функция для редактирования фильма
 function editFilm(id) {
     fetch(`/lab7/rest-api/films/${id}`)
         .then(response => {
@@ -129,16 +150,19 @@ function editFilm(id) {
         });
 }
 
+// Показывает модальное окно для добавления или редактирования фильма
 function showModal() {
-    document.getElementById('add-film-modal').style.display = 'block'; // Показываем модальное окно
+    document.getElementById('add-film-modal').style.display = 'block';
     document.getElementById('error-message').innerText = ''; // Очищаем сообщение об ошибке
 }
 
+// Скрывает модальное окно
 function hideModal() {
     document.getElementById('add-film-modal').style.display = 'none';
     document.getElementById('error-message').style.display = 'none'; // Скрываем ошибки при закрытии
 }
 
+// Функция для открытия модального окна с пустыми полями (для добавления нового фильма)
 function addFilm() {
     document.getElementById('id').value = '';
     document.getElementById('title').value = '';
