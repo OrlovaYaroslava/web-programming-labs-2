@@ -6,5 +6,15 @@
     <p><strong>Описание:</strong> {{ recipe.description }}</p>
     <p><strong>Ингредиенты:</strong> {{ recipe.ingredients }}</p>
     <p><strong>Шаги приготовления:</strong> {{ recipe.steps }}</p>
-    <a href="/rgz/">Вернуться на главную</a>
+    
+
+    {% if 'role' in session and session['role'] == 'admin' %}
+        <!-- Форма для удаления рецепта -->
+        <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=loop.index0) }}">
+            <button type="submit">Удалить рецепт</button>
+        </form>
+    {% endif %}
+
+    <br>
+    <a href="{{ url_for('rgz.recipes') }}">Вернуться к списку рецептов</a>
 {% endblock %}

@@ -6,9 +6,17 @@
         {% for recipe in recipes %}
             <li>
                 <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
+                {% if 'role' in session and session['role'] == 'admin' %}
+                    <!-- Форма для удаления рецепта -->
+                    <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=loop.index0) }}" style="display:inline;">
+                        <button type="submit">Удалить</button>
+                    </form>
+                {% endif %}
             </li>
-        {% else %}
-            <li>Рецепты не найдены.</li>
         {% endfor %}
     </ul>
+
+    {% if not recipes %}
+        <p>Рецепты не найдены.</p>
+    {% endif %}
 {% endblock %}

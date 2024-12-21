@@ -5,24 +5,34 @@
     
     <!-- Форма для ввода запроса -->
     <form method="GET" action="/rgz/search">
-        <input type="text" name="query" placeholder="Введите название рецепта" value="{{ query }}" required>
+        <input type="text" name="query" placeholder="Введите название рецепта" value="{{ query.strip() }}">
+        <input type="text" name="ingredient_query" placeholder="Ингредиенты (через запятую)" value="{{ ingredient_query.strip() }}">
+        
+        <!-- Выбор режима поиска -->
+        <div>
+            <label>
+                <input type="radio" name="search_mode" value="all" {% if search_mode == 'all' %}checked{% endif %}> Все ингредиенты должны быть в рецепте
+            </label><br>
+            <label>
+                <input type="radio" name="search_mode" value="any" {% if search_mode == 'any' %}checked{% endif %}> Хотя бы один ингредиент должен быть в рецепте
+            </label>
+        </div>
+
         <button type="submit">Найти</button>
     </form>
 
-    {% if recipes %}
-        <h3>Результаты поиска:</h3>
-        <ul>
-            {% for recipe in recipes %}
-                <li>
-                    <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
-                </li>
-            {% else %}
-                <li>Рецепты не найдены.</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        {% if query %}
-            <p>Ничего не найдено по запросу: "{{ query }}"</p>
+    {% if query or ingredient_query %}
+        {% if recipes %}
+            <h3>Результаты поиска:</h3>
+            <ul>
+                {% for recipe in recipes %}
+                    <li>
+                        <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Ничего не найдено по запросу.</p>
         {% endif %}
     {% endif %}
 {% endblock %}
