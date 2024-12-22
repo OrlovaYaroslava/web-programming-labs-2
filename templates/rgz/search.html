@@ -27,7 +27,7 @@
             <ul>
                 {% for recipe in recipes %}
                     <li>
-                        <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
+                        <a href="{{ url_for('rgz.recipe_detail', recipe_id=recipe[0]) }}">{{ recipe[1] }}</a>
                     </li>
                 {% endfor %}
             </ul>

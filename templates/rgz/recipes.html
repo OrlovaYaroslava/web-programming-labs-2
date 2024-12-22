@@ -5,12 +5,12 @@
     <ul>
         {% for recipe in recipes %}
         <li>
-            <a href="{{ url_for('rgz.recipe_detail', recipe_id=loop.index0) }}">{{ recipe.name }}</a>
+            <a href="{{ url_for('rgz.recipe_detail', recipe_id=recipe[0]) }}">{{ recipe[1] }}</a>
             {% if 'role' in session and session['role'] == 'admin' %}
-                <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=loop.index0) }}" class="inline-form" style="display:inline;">
+                <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=recipe[0]) }}" class="inline-form" style="display:inline;">
                     <button type="submit">Удалить</button>
                 </form>
-                <a href="{{ url_for('rgz.edit_recipe', recipe_id=loop.index0) }}">Редактировать</a>
+                <a href="{{ url_for('rgz.edit_recipe', recipe_id=recipe[0]) }}">Редактировать</a>
             {% endif %}
         </li>
     {% endfor %}

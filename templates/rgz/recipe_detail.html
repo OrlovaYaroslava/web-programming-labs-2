@@ -6,7 +6,6 @@
     <p><strong>Описание:</strong> {{ recipe.description }}</p>
     <p><strong>Ингредиенты:</strong> {{ recipe.ingredients }}</p>
     <p><strong>Шаги приготовления:</strong> {{ recipe.steps }}</p>
-    
 
     {% if 'role' in session and session['role'] == 'admin' %}
         <!-- Форма для удаления рецепта -->

@@ -2,18 +2,23 @@
 
 {% block content %}
     <h2>Редактирование рецепта</h2>
-    <form method="POST" action="/rgz/edit_recipe/{{ recipe_id }}">
+    <form method="POST" action="{{ url_for('rgz.edit_recipe', recipe_id=recipe.id) }}">
         <label for="name">Название рецепта:</label>
-        <input type="text" id="name" name="name" value="{{ recipe.name }}" required><br><br>
+        <input type="text" id="name" name="name" value="{{ recipe.name }}" required>
+        <br>
         <label for="description">Описание:</label>
-        <textarea id="description" name="description" required>{{ recipe.description }}</textarea><br><br>
+        <textarea id="description" name="description" required>{{ recipe.description }}</textarea>
+        <br>
         <label for="ingredients">Ингредиенты (через запятую):</label>
-        <textarea id="ingredients" name="ingredients" required>{{ recipe.ingredients }}</textarea><br><br>
+        <textarea id="ingredients" name="ingredients" required>{{ recipe.ingredients }}</textarea>
+        <br>
         <label for="steps">Шаги приготовления:</label>
-        <textarea id="steps" name="steps" required>{{ recipe.steps }}</textarea><br><br>
+        <textarea id="steps" name="steps" required>{{ recipe.steps }}</textarea>
+        <br>
         <label for="photo_url">Ссылка на фото:</label>
-        <input type="url" id="photo_url" name="photo_url" value="{{ recipe.photo_url }}"><br><br>
+        <input type="text" id="photo_url" name="photo_url" value="{{ recipe.photo_url }}" required>
+        <br>
         <button type="submit">Сохранить изменения</button>
+        <a href="{{ url_for('rgz.recipes') }}">Отмена</a>
     </form>
-    <a href="/rgz/recipes">Отмена</a>
 {% endblock %}
