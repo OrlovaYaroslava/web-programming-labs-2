@@ -1,0 +1,19 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>Редактирование рецепта</h2>
+    <form method="POST" action="/rgz/edit_recipe/{{ recipe_id }}">
+        <label for="name">Название рецепта:</label>
+        <input type="text" id="name" name="name" value="{{ recipe.name }}" required><br><br>
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" required>{{ recipe.description }}</textarea><br><br>
+        <label for="ingredients">Ингредиенты (через запятую):</label>
+        <textarea id="ingredients" name="ingredients" required>{{ recipe.ingredients }}</textarea><br><br>
+        <label for="steps">Шаги приготовления:</label>
+        <textarea id="steps" name="steps" required>{{ recipe.steps }}</textarea><br><br>
+        <label for="photo_url">Ссылка на фото:</label>
+        <input type="url" id="photo_url" name="photo_url" value="{{ recipe.photo_url }}"><br><br>
+        <button type="submit">Сохранить изменения</button>
+    </form>
+    <a href="/rgz/recipes">Отмена</a>
+{% endblock %}

@@ -11,12 +11,36 @@
     <header>
         <h1>Рецепты</h1>
         <nav>
-            <a href="/rgz/">Главная</a>
-            <a href="/rgz/add_recipe">Добавить рецепт</a>
-            <a href="/rgz/search">Поиск</a>
-            <a href="/rgz/recipes">Все рецепты</a>
+            <div class="nav-center">
+                <a href="/rgz/">Главная</a>
+                <a href="/rgz/add_recipe">Добавить рецепт</a>
+                <a href="/rgz/search">Поиск</a>
+                <a href="/rgz/recipes">Все рецепты</a>
+            </div>
+            <div class="nav-right">
+                {% if 'username' in session %}
+                    <span>Добро пожаловать, {{ session['username'] }}!</span>
+                    <a href="/rgz/logout">Выйти</a>
+                {% else %}
+                    <a href="/rgz/login">Вход</a>
+                    <a href="/rgz/register">Регистрация</a>
+                {% endif %}
+            </div>
         </nav>
     </header>
+    
+    <!-- Добавление блока для отображения flash сообщений -->
+    <div class="alerts">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
     
     <main>
         {% block content %}{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>Добро пожаловать!</h2>
+    {% if username %}
+        <p>Привет, {{ username }}! Ваша роль: {{ role }}.</p>
+        <a href="/rgz/logout">Выйти</a>
+    {% else %}
+        <p>Вы не вошли в систему.</p>
+        <a href="/rgz/login">Войти</a>
+    {% endif %}
+{% endblock %}

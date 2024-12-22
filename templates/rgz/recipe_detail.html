@@ -2,7 +2,7 @@
 
 {% block content %}
     <h2>{{ recipe.name }}</h2>
-    <img src="{{ recipe.photo_url }}" alt="Фото рецепта" style="max-width: 300px;">
+    <img src="{{ recipe.photo_url }}" alt="Фото рецепта" style="max-width:100%; height:auto;">
     <p><strong>Описание:</strong> {{ recipe.description }}</p>
     <p><strong>Ингредиенты:</strong> {{ recipe.ingredients }}</p>
     <p><strong>Шаги приготовления:</strong> {{ recipe.steps }}</p>
@@ -10,7 +10,7 @@
 
     {% if 'role' in session and session['role'] == 'admin' %}
         <!-- Форма для удаления рецепта -->
-        <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=loop.index0) }}">
+        <form method="POST" action="{{ url_for('rgz.delete_recipe', recipe_id=recipe_id) }}" class="inline-form">
             <button type="submit">Удалить рецепт</button>
         </form>
     {% endif %}

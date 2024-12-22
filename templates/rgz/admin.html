@@ -1,0 +1,12 @@
+{% extends 'rgz/base_rgz.html' %}
+
+{% block content %}
+    <h2>Страница администратора</h2>
+    <p>Список пользователей:</p>
+    <ul>
+        {% for user in users %}
+            <li>{{ user.username }} ({{ user.role }})</li>
+        {% endfor %}
+    </ul>
+    <a href="/rgz/home">На главную</a>
+{% endblock %}
