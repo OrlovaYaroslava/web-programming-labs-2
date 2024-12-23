@@ -9,7 +9,8 @@
     <img src="{{ url_for('static', filename=image) }}" alt="Картинка" style="border: 5px solid #008000; border-radius: 10px; max-width: 60%; height: auto;">
 </div>
 
-<div style="text-align: center; margin-top: 30px;">
-    <a href="{{ url_for('lab9.get_name') }}" class="btn btn-primary" style="text-decoration: none; padding: 10px 20px; background-color: #4CAF50; color: white; border-radius: 5px;">Начать сначала</a>
-</div>
+<form action="{{ url_for('lab9.get_name') }}" method="GET" style="text-align: center;">
+    <button type="submit" class="btn btn-primary" style="text-decoration: none; padding: 10px 20px; background-color: #4CAF50; color: white; border-radius: 5px;">Начать сначала</button>
+</form>
+
 {% endblock %}

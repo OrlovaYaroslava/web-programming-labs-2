@@ -1,13 +1,12 @@
 {% extends "lab9/base_lab9.html" %}
-
 {% block main %}
-<h1>Введите ваше имя</h1>
-<form action="/lab9/" method="post">
-    <label for="name">Имя:</label>
-    <input type="text" id="name" name="name" required>
-    <button type="submit">Далее</button>
+<h1>Начало</h1>
+<form method="post">
+    <label for="name">Введите имя:</label>
+    <input type="text" name="name" id="name">
+    <button type="submit">Продолжить</button>
 </form>
 {% if error %}
-<p class="error">{{ error }}</p>
+<p style="color: red;">{{ error }}</p>
 {% endif %}
 {% endblock %}
