@@ -36,7 +36,7 @@ app.register_blueprint(lab8)
 app.register_blueprint(rgz)
 
 # Чтение секретного ключа и типа базы данных из переменных окружения
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'секретно-секретный секрет')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super_secret_key_123')
 app.config['DB_TYPE'] = os.getenv('DB_TYPE', 'postgres')
 
 

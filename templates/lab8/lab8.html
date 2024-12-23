@@ -42,7 +42,7 @@
 <body>
     <div class="navbar">
         <div>
-            <a href="/lab8/list">Список статей</a>
+            <a href="/lab8/articles">Список статей</a>
             <a href="/lab8/create">Создать статью</a>
             <a href="/lab8/public_articles">Публичные статьи</a>
             <a href="/lab8/users">Пользователи</a>
@@ -52,8 +52,8 @@
                 <a href="/lab8/login">Войти</a>
                 <a href="/lab8/register">Регистрация</a>
             {% else %}
-                <form action="/lab8/logout" method="post">
-                    <a href="/lab8/logout">Выйти</a>
+            <form action="/lab8/logout" method="post" style="display:inline;">
+                <button type="submit">Выйти</button>
                 </form>
             {% endif %}
             <span>{{ user_name or "Anonymous" }}</span>

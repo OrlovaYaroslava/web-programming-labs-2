@@ -1,21 +1,34 @@
 {% extends "base.html" %}
 
+{% block lab %}Лабораторная работа 8{% endblock %}
+
 {% block main %}
-<h1>Создать новую статью</h1>
-<form action="{{ url_for('lab8.create_article') }}" method="post">
+<h1>Создание статьи</h1>
+
+<!-- Ссылка на главную -->
+<a href="/lab8">На главную</a>
+
+<!-- Вывод ошибок -->
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form action="/lab8/create" method="post">
     <div>
-        <label for="title">Заголовок:</label>
-        <input type="text" id="title" name="title" required>
+        <label>Заголовок: <input type="text" name="title"></label>
     </div>
     <div>
-        <label for="article_text">Текст статьи:</label>
-        <textarea id="article_text" name="article_text" required></textarea>
+        <label>Текст статьи:</label><br>
+        <textarea name="article_text" rows="10" cols="50"></textarea>
     </div>
     <div>
-        <label for="is_public">
-            <input type="checkbox" id="is_public" name="is_public"> Сделать статью публичной
-        </label>
+        <label><input type="checkbox" name="is_favorite"> Избранное</label>
     </div>
-    <button type="submit">Создать</button>
+    <div>
+        <label><input type="checkbox" name="is_public"> Публичное</label>
+    </div>
+    <div>
+        <button type="submit">Создать статью</button>
+    </div>
 </form>
 {% endblock %}

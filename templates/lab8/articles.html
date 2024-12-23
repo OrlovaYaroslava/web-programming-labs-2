@@ -1,18 +1,33 @@
 {% extends "base.html" %}
 
+{% block lab %}Лабораторная работа 8{% endblock %}
+
 {% block main %}
-<h1>Ваши статьи</h1>
+<h1>Список статей</h1>
+
+<!-- Ссылка на главную -->
+<a href="/lab8">На главную</a>
+
 <ul>
     {% for article in articles %}
-    <li>
-        <strong>{{ article.title }}</strong>: {{ article.article_text }}
-        <p><i>Автор: {{ article.author }}</i></p>
-        <a href="{{ url_for('lab8.edit_article', article_id=article.id) }}">Редактировать</a> -
-        <form action="{{ url_for('lab8.delete_article', article_id=article.id) }}" method="post" style="display:inline;">
-            <button type="submit">Удалить</button>
-        </form>
-    </li>
+        <li>
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.article_text }}</p>
+            <p><strong>Избранное:</strong> {{ 'Да' if article.is_favorite else 'Нет' }}</p>
+            <p><strong>Публичное:</strong> {{ 'Да' if article.is_public else 'Нет' }}</p>
+            
+            <!-- Ссылка на редактирование -->
+            <a href="/lab8/edit/{{ article.id }}">Редактировать</a>
+            
+            <!-- Форма для удаления -->
+            <form action="/lab8/delete/{{ article.id }}" method="post" style="display: inline;">
+                <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">Удалить</button>
+            </form>
+        </li>
     {% endfor %}
 </ul>
-<a href="{{ url_for('lab8.create_article') }}">Создать новую статью</a>
+
+
+
+<a href="/lab8/create">Создать новую статью</a>
 {% endblock %}
