@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<h1>Результаты поиска</h1>
+
+<!-- Ссылка на главную -->
+<a href="/lab8">На главную</a>
+
+<p>По вашему запросу: "{{ query }}"</p>
+
+<!-- Если статьи не найдены -->
+{% if not articles %}
+    <p>Ничего не найдено.</p>
+{% else %}
+    <ul>
+        {% for article in articles %}
+            <li>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.article_text }}</p>
+                <p><strong>Автор:</strong> {{ article.author.login }}</p>
+                <p><strong>Избранное:</strong> {{ 'Да' if article.is_favorite else 'Нет' }}</p>
+
+                <!-- Кнопки доступны только для автора -->
+                {% if current_user.is_authenticated and article.author.id == current_user.id %}
+                    <a href="/lab8/edit/{{ article.id }}">Редактировать</a>
+                    <form action="/lab8/delete/{{ article.id }}" method="post" style="display: inline;">
+                        <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">Удалить</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}

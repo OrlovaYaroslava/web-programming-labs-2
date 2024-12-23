@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, session, render_template, current_app, redirect, url_for
+from flask import Blueprint, request, jsonify, session, render_template, current_app, redirect, url_for, flash
 from datetime import datetime
 import psycopg2
 import sqlite3
@@ -132,61 +132,90 @@ def create_article():
 @lab8.route('/lab8/articles', methods=['GET'])
 @login_required
 def article_list():
-    articles = Articles.query.filter_by(login_id=current_user.id).all()
+    # Отображаем все статьи для всех пользователей
+    articles = Articles.query.all()
+
     return render_template('lab8/articles.html', articles=articles)
+
 
 
 #Маршрут для редактирования статьи
 @lab8.route('/lab8/edit/<int:article_id>', methods=['GET', 'POST'])
 @login_required
 def edit_article(article_id):
-    # Ищем статью по ID
     article = Articles.query.get_or_404(article_id)
 
-    # Проверяем, что текущий пользователь — автор статьи
+    # Проверяем, что текущий пользователь является автором
     if article.login_id != current_user.id:
-        return "Вы не можете редактировать эту статью", 403
+        flash('Вы не автор этой статьи, поэтому не можете её редактировать.', 'error')
+        return redirect(url_for('lab8.article_list'))
 
+    # Редактирование статьи
     if request.method == 'GET':
-        # Отображаем текущие данные статьи в форме
         return render_template('lab8/edit.html', article=article)
 
-    # Получаем обновлённые данные из формы
     title = request.form.get('title')
     article_text = request.form.get('article_text')
-    is_favorite = request.form.get('is_favorite') == 'on'  # Возвращает True, если чекбокс установлен
-    is_public = request.form.get('is_public') == 'on'      # Возвращает True, если чекбокс установлен
+    is_favorite = request.form.get('is_favorite') == 'on'
+    is_public = request.form.get('is_public') == 'on'
 
-    # Проверяем, что заголовок и текст статьи не пустые
     if not title or not article_text:
-        error = 'Заголовок и текст статьи не могут быть пустыми'
-        return render_template('lab8/edit.html', article=article, error=error)
+        flash('Заголовок и текст статьи не могут быть пустыми.', 'error')
+        return render_template('lab8/edit.html', article=article)
 
-    # Обновляем данные статьи
     article.title = title
     article.article_text = article_text
     article.is_favorite = is_favorite
     article.is_public = is_public
-
     db.session.commit()
 
-    # Перенаправляем на страницу со списком статей
+    flash('Статья успешно обновлена!', 'success')
     return redirect(url_for('lab8.article_list'))
+
 
 
 @lab8.route('/lab8/delete/<int:article_id>', methods=['POST'])
 @login_required
 def delete_article(article_id):
-    # Находим статью по ID
     article = Articles.query.get_or_404(article_id)
 
-    # Проверяем, что текущий пользователь является автором статьи
+    # Проверяем, что текущий пользователь является автором
     if article.login_id != current_user.id:
-        return "Вы не можете удалить эту статью", 403
+        flash('Вы не автор этой статьи, поэтому не можете её удалить.', 'error')
+        return redirect(url_for('lab8.article_list'))
 
-    # Удаляем статью из базы данных
     db.session.delete(article)
     db.session.commit()
 
-    # Перенаправляем на страницу со списком статей
+    flash('Статья успешно удалена!', 'success')
     return redirect(url_for('lab8.article_list'))
+
+
+
+
+@lab8.route('/lab8/public_articles', methods=['GET'])
+def public_articles():
+    # Получаем все статьи, которые публичные
+    articles = Articles.query.filter_by(is_public=True).all()
+
+    # Рендерим страницу со статьями
+    return render_template('lab8/public_articles.html', articles=articles)
+
+
+@lab8.route('/lab8/search', methods=['GET', 'POST'])
+@login_required
+def search_articles():
+    if request.method == 'POST':
+        # Получаем строку поиска из формы
+        search_query = request.form.get('query', '')
+
+        # Фильтруем статьи: свои и публичные
+        articles = Articles.query.filter(
+            (Articles.login_id == current_user.id) | (Articles.is_public == True),
+            (Articles.title.ilike(f'%{search_query}%') | Articles.article_text.ilike(f'%{search_query}%'))
+        ).all()
+
+        return render_template('lab8/search_results.html', articles=articles, query=search_query)
+
+    # Если метод GET, просто отображаем пустую форму поиска
+    return render_template('lab8/search.html')

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+<h1>Публичные статьи</h1>
+
+<!-- Ссылка на главную -->
+<a href="/lab8">На главную</a>
+
+<!-- Если статей нет -->
+{% if not articles %}
+    <p>Пока нет доступных статей.</p>
+{% else %}
+    <ul>
+        {% for article in articles %}
+            <li>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.article_text }}</p>
+                <p><strong>Автор:</strong> {{ article.author.login }}</p>
+                <p><strong>Избранное:</strong> {{ 'Да' if article.is_favorite else 'Нет' }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
