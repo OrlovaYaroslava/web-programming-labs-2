@@ -1,0 +1,14 @@
+{% extends "lab9/base_lab9.html" %}
+
+{% block main %}
+<h1>Что вам больше нравится?</h1>
+<form action="/lab9/preference?name={{ name }}&age={{ age }}&gender={{ gender }}" method="post">
+    <label>
+        <input type="radio" name="preference" value="sweet" required> Что-то вкусное
+    </label>
+    <label>
+        <input type="radio" name="preference" value="beautiful"> Что-то красивое
+    </label>
+    <button type="submit">Далее</button>
+</form>
+{% endblock %}

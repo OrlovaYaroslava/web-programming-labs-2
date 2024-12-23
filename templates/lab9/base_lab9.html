@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>{% block title %}Лабораторная работа 9{% endblock %}</title>
+    <style>
+        body {
+            pointer-events: none; /* Отключает взаимодействие с фоном */
+        }
+        main, header, footer,.content {
+            pointer-events: auto; /* Включает взаимодействие для важных блоков */
+        }
+         
+        /* Основной стиль для страницы */
+        body {
+            background: url('/static/lab9/snow_background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #87CEEB, #ffffff);
+        }
+
+        /* Стиль для заголовков */
+        h1, h2, h3 {
+            color: #ff6347;
+            text-shadow: 2px 2px 5px black;
+        }
+
+        /* Контейнер для страниц */
+        .content {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        /* Форма */
+        form {
+            margin: 20px auto;
+            width: 80%;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"], input[type="number"], button, input[type="radio"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="radio"] {
+            width: auto;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для ошибок */
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+
+        /* Новогодние элементы */
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        /* Анимация снежинок */
+        @keyframes snow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            color: white;
+            font-size: 24px;
+            animation: snow 10s linear infinite;
+        }
+        
+        img {
+            width: 400px;
+            height: 300px;
+            margin: 20px 0;
+            border: 3px solid white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎄 С Новым Годом! 🎄</h1>
+    </header>
+
+    <!-- Снег -->
+    <div id="snowflakes">
+        {% for i in range(1, 20) %}
+            <div class="snowflake" style="left: {{ 5 * i }}%; animation-delay: {{ i / 2 }}s;">❄</div>
+        {% endfor %}
+    </div>
+
+    <div class="content">
+        {% block main %}{% endblock %}
+    </div>
+
+    <footer>
+        <p>© Лабораторная работа 9 — Новогоднее настроение</p>
+    </footer>
+</body>
+</html>
