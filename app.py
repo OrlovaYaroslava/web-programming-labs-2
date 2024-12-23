@@ -1,6 +1,7 @@
 from flask import Flask, url_for
 import os
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from db import db 
 from os import path
 from db.models import Users
