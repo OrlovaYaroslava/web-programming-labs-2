@@ -53,7 +53,7 @@
                 <a href="/lab8/register">Регистрация</a>
             {% else %}
                 <form action="/lab8/logout" method="post">
-                    <button type="submit">Выйти</button>
+                    <a href="/lab8/logout">Выйти</a>
                 </form>
             {% endif %}
             <span>{{ user_name or "Anonymous" }}</span>
@@ -65,3 +65,4 @@
     {% block main %}{% endblock %}
 </body>
 </html>
+

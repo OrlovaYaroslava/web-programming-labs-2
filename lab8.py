@@ -5,17 +5,27 @@ import sqlite3
 from os import path
 from db import db
 from db.models import Users, Articles
-from werkzeug.security import generate_password_hash
-from werkzeug.security import check_password_hash
-from flask_login import login_user, LoginManager, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 
 lab8 = Blueprint('lab8', __name__)
 
+# Инициализация LoginManager
+login_manager = LoginManager()
+login_manager.login_view = 'lab8.login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
+
 @lab8.route('/lab8')
 def lab8_home():
-    user_name = session.get('login', 'Anonymous')
+    user_name = current_user.login if current_user.is_authenticated else 'Anonymous'
     return render_template('lab8/lab8.html', user_name=user_name)
-#регистрация
+
+
+# Регистрация
 @lab8.route('/lab8/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -46,6 +56,7 @@ def register():
     return redirect(url_for('lab8.lab8_home'))
 
 
+# Вход в систему
 @lab8.route('/lab8/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
@@ -61,11 +72,15 @@ def login():
     if user and check_password_hash(user.password, password_form):
         login_user(user, remember=False)
         return redirect(url_for('lab8.lab8_home'))
-    
+
     error = 'Ошибка входа: логин и/или пароль неверны'
     return render_template('lab8/login.html', error=error)
 
-@lab8.route('/lab8/articles/')
+
+# Выход из системы
+@lab8.route('/lab8/logout', methods=['GET'])
 @login_required
-def article_list():
-    return "Список статей"
+def logout():
+    logout_user()
+    return redirect(url_for('lab8.lab8_home'))
+

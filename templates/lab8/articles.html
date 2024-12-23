@@ -1,22 +1,18 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block main %}
-    <h1>Статьи</h1>
-    {% if message %}
-        <p>{{ message }}</p>
-    {% else %}
-        <ul>
-            {% for article in articles %}
-                <li>
-                    <h2>{{ article['title'] }}</h2>
-                    <p>{{ article['article_text'] }}</p>
-                    <form action="{{ url_for('lab8.delete_article', article_id=article['id']) }}" method="post" style="display:inline;">
-                        <button type="submit">Удалить</button>
-                    </form>
-                    <a href="{{ url_for('lab8.edit_article', article_id=article['id']) }}">Редактировать</a>
-                </li>
-            {% endfor %}
-            <a href="/lab8">На главную</a>
-        </ul>
-    {% endif %}
+<h1>Ваши статьи</h1>
+<ul>
+    {% for article in articles %}
+    <li>
+        <strong>{{ article.title }}</strong>: {{ article.article_text }}
+        <p><i>Автор: {{ article.author }}</i></p>
+        <a href="{{ url_for('lab8.edit_article', article_id=article.id) }}">Редактировать</a> -
+        <form action="{{ url_for('lab8.delete_article', article_id=article.id) }}" method="post" style="display:inline;">
+            <button type="submit">Удалить</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('lab8.create_article') }}">Создать новую статью</a>
 {% endblock %}
