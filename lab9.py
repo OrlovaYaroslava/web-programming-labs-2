@@ -70,29 +70,46 @@ def preference2():
         return redirect(url_for('lab9.greeting'))
     return render_template('lab9/preference2.html')
 
-@lab9.route('/lab9/greeting', methods=['GET'])
+@lab9.route('/lab9/greeting')
 def greeting():
-    # Получаем данные из сессии
     name = session.get('name', 'Гость')
     age = session.get('age', 0)
     gender = session.get('gender', 'unknown')
-    preference1 = session.get('preference1', 'unknown')
-    preference2 = session.get('preference2', 'unknown')
+    preference1 = session.get('preference1', 'unknown')  # Вкусное или Красивое
+    preference2 = session.get('preference2', 'unknown')  # Сладкое или Солёное
 
-    # Выбор картинки
-    if gender == 'male':
-        if preference1 == 'sweet':
-            image = 'lab9/sweet_male.jpg'
-        else:
-            image = 'lab9/beautiful_male.jpg'
-    else:
-        if preference1 == 'sweet':
-            image = 'lab9/sweet_female.jpg'
-        else:
-            image = 'lab9/beautiful_female.jpg'
+    # Логика выбора изображения и поздравления
+    if int(age) < 18:  # Для детей
+        if gender == 'male':  # Мальчик
+            if preference1 == 'sweet':
+                image = 'lab9/sweets.jpg'  # Картинка с конфетами
+                greeting_text = f"Поздравляю тебя, {name}! Желаю, чтобы ты быстро вырос, был умным и счастливым. Вот тебе подарок — мешочек конфет!"
+            else:
+                image = 'lab9/beautiful.jpg'  # Картинка с красивым
+                greeting_text = f"Поздравляю тебя, {name}! Желаю, чтобы ты быстро вырос, был умным и счастливым. Вот тебе подарок — что-то красивое!"
+        else:  # Девочка
+            if preference1 == 'sweet':
+                image = 'lab9/sweets.jpg'  # Картинка с конфетами
+                greeting_text = f"Поздравляю тебя, {name}! Желаю, чтобы ты быстро выросла, была умной и счастливой. Вот тебе подарок — мешочек конфет!"
+            else:
+                image = 'lab9/beautiful.jpg'  # Картинка с красивым
+                greeting_text = f"Поздравляю тебя, {name}! Желаю, чтобы ты быстро выросла, была умной и счастливой. Вот тебе подарок — что-то красивое!"
+    else:  # Для взрослых
+        if gender == 'male':  # Мужчина
+            if preference1 == 'sweet':
+                image = 'lab9/sweet_male.jpg'  # Картинка для взрослого мужчины
+                greeting_text = f"Поздравляю вас, {name}! Желаю успехов, здоровья и счастья. Вот ваш подарок — сладкое угощение!"
+            else:
+                image = 'lab9/beautiful_male.jpg'  # Картинка с красивым для мужчины
+                greeting_text = f"Поздравляю вас, {name}! Желаю успехов, здоровья и счастья. Вот ваш подарок — что-то красивое!"
+        else:  # Женщина
+            if preference1 == 'sweet':
+                image = 'lab9/sweet_female.jpg'  # Картинка для взрослой женщины
+                greeting_text = f"Поздравляю вас, {name}! Желаю успехов, здоровья и счастья. Вот ваш подарок — сладкое угощение!"
+            else:
+                image = 'lab9/beautiful_female.jpg'  # Картинка с красивым для женщины
+                greeting_text = f"Поздравляю вас, {name}! Желаю успехов, здоровья и счастья. Вот ваш подарок — что-то красивое!"
 
-    return render_template(
-        'lab9/greeting.html',
-        name=name, age=age, gender=gender, preference1=preference1,
-        preference2=preference2, image=image
-    )
+    # Передаем данные в шаблон
+    return render_template('lab9/greeting.html', name=name, age=age, gender=gender, image=image, greeting_text=greeting_text)
+
