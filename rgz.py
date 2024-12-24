@@ -2,10 +2,21 @@
 from flask import Flask, Blueprint, request, jsonify, session, render_template, redirect, flash, current_app
 import psycopg2
 import sqlite3
+import re
 from os import path
 rgz = Blueprint('rgz', __name__)
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Ключ для сессий
+
+# Функция для валидации логина
+def is_valid_username(username):
+    # Логин должен состоять из латинских букв, цифр и знаков препинания, длиной от 3 до 30 символов
+    return bool(re.match(r'^[a-zA-Z0-9._-]{3,30}$', username))
+
+# Функция для валидации пароля
+def is_valid_password(password):
+    # Пароль должен состоять из латинских букв, цифр и знаков препинания, длиной от 6 до 50 символов
+    return bool(re.match(r'^[a-zA-Z0-9!@#$%^&*()_+=\-{}[\]:;"\'<>,.?/\\|]{6,50}$', password))
 
 # Конфигурация приложения (выбор типа базы данных)
 app.config['DB_TYPE'] = 'postgres'  # 'postgres' или 'sqlite'
@@ -47,6 +58,15 @@ def register():
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
+        # Проверяем валидность логина и пароля
+        if not is_valid_username(username):
+            flash('Логин должен содержать только латинские буквы, цифры и знаки препинания, от 3 до 30 символов.', 'error')
+            return redirect('/rgz/register')
+
+        if not is_valid_password(password):
+            flash('Пароль должен содержать только латинские буквы, цифры и знаки препинания, от 6 до 50 символов.', 'error')
+            return redirect('/rgz/register')
+
         if password != confirm_password:
             flash('Пароли не совпадают!', 'error')
             return redirect('/rgz/register')
@@ -74,6 +94,7 @@ def register():
         return redirect('/rgz/login')
 
     return render_template('rgz/register.html')
+
 
 @rgz.route('/rgz/login', methods=['GET', 'POST'])
 def login():
@@ -266,7 +287,7 @@ def edit_recipe(recipe_id):
         'photo_url': recipe[5]
     },recipe_id=recipe_id)
 
-    return render_template('rgz/edit_recipe.html', recipe=recipe,recipe_id=recipe_id)
+    
 
 @rgz.route('/rgz/search', methods=['GET'])
 def search():
@@ -325,3 +346,29 @@ def search():
         ingredient_query=ingredient_query,
         search_mode=search_mode,
     )
+
+@rgz.route('/rgz/account', methods=['GET', 'POST'])
+def account():
+    if 'username' not in session:
+        flash('Вы не авторизованы!', 'error')
+        return redirect('/rgz/login')
+
+    username = session['username']
+
+    if request.method == 'POST':
+        conn, cur = db_connect()
+        try:
+            # Удаляем аккаунт пользователя из базы данных
+            if current_app.config['DB_TYPE'] == 'postgres':
+                cur.execute("DELETE FROM users WHERE username = %s;", (username,))
+            else:
+                cur.execute("DELETE FROM users WHERE username = ?;", (username,))
+        finally:
+            db_close(conn, cur)
+
+        # Завершаем сессию
+        session.clear()
+        flash('Ваш аккаунт успешно удалён.', 'success')
+        return redirect('/rgz/')
+
+    return render_template('rgz/account.html', username=username)

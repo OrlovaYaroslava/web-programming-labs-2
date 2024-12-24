@@ -153,3 +153,38 @@ nav {
     color: #0c5460;
     border: 1px solid #bee5eb;
 }
+
+button.danger {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.danger:hover {
+    background-color: #ff1a1a;
+}
+
+#delete-account-form {
+    width: 300px;
+    margin: auto;
+    padding: 40px;
+    border: none; /* Убираем рамку */
+    text-align: center; /* Центрируем текст */
+}
+
+#delete-account-form .danger {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#delete-account-form .danger:hover {
+    background-color: #ff3333; /* Изменение цвета при наведении */
+}
