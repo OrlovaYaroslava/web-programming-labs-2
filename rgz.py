@@ -6,8 +6,6 @@ import re
 from werkzeug.security import generate_password_hash, check_password_hash
 from os import path
 rgz = Blueprint('rgz', __name__)
-app = Flask(__name__)
-app.secret_key = 'supersecretkey'  # Ключ для сессий
 
 # Функция для валидации логина
 def is_valid_username(username):
@@ -18,9 +16,6 @@ def is_valid_username(username):
 def is_valid_password(password):
     # Пароль должен состоять из латинских букв, цифр и знаков препинания, длиной от 6 до 50 символов
     return bool(re.match(r'^[a-zA-Z0-9!@#$%^&*()_+=\-{}[\]:;"\'<>,.?/\\|]{6,50}$', password))
-
-# Конфигурация приложения (выбор типа базы данных)
-app.config['DB_TYPE'] = 'postgres'  # 'postgres' или 'sqlite'
 
 # Функция подключения к базе данных
 def db_connect():
