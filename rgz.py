@@ -3,6 +3,7 @@ from flask import Flask, Blueprint, request, jsonify, session, render_template, 
 import psycopg2
 import sqlite3
 import re
+from werkzeug.security import generate_password_hash, check_password_hash
 from os import path
 rgz = Blueprint('rgz', __name__)
 app = Flask(__name__)
@@ -53,23 +54,30 @@ def main():
 
 @rgz.route('/rgz/register', methods=['GET', 'POST'])
 def register():
+    def is_valid_username(username):
+        import re
+        return bool(re.match(r'^[a-zA-Z0-9._-]{3,30}$', username))
+
+    def is_valid_password(password):
+        import re
+        return bool(re.match(r'^[a-zA-Z0-9!@#$%^&*()_+=\-{}[\]:;"\'<>,.?/\\|]{6,50}$', password))
+
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
+        confirm_password = request.form.get('confirm_password', '').strip()
 
-        # Проверяем валидность логина и пароля
         if not is_valid_username(username):
-            flash('Логин должен содержать только латинские буквы, цифры и знаки препинания, от 3 до 30 символов.', 'error')
-            return redirect('/rgz/register')
-
+            flash('Неверный формат логина.', 'error')
+            return render_template('rgz/register.html')
         if not is_valid_password(password):
-            flash('Пароль должен содержать только латинские буквы, цифры и знаки препинания, от 6 до 50 символов.', 'error')
-            return redirect('/rgz/register')
-
+            flash('Неверный формат пароля.', 'error')
+            return render_template('rgz/register.html')
         if password != confirm_password:
-            flash('Пароли не совпадают!', 'error')
-            return redirect('/rgz/register')
+            flash('Пароли не совпадают.', 'error')
+            return render_template('rgz/register.html')
+
+        hashed_password = generate_password_hash(password)  # Хэшируем пароль
 
         conn, cur = db_connect()
         try:
@@ -80,20 +88,23 @@ def register():
             existing_user = cur.fetchone()
 
             if existing_user:
-                flash('Пользователь с таким именем уже существует!', 'error')
-                return redirect('/rgz/register')
+                flash('Пользователь с таким логином уже существует.', 'error')
+                return render_template('rgz/register.html')
 
             if current_app.config['DB_TYPE'] == 'postgres':
-                cur.execute("INSERT INTO users (username, password, role) VALUES (%s, %s, %s);", (username, password, 'user'))
+                cur.execute("INSERT INTO users (username, password, role) VALUES (%s, %s, %s);",
+                            (username, hashed_password, 'user'))
             else:
-                cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?);", (username, password, 'user'))
+                cur.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?);",
+                            (username, hashed_password, 'user'))
         finally:
             db_close(conn, cur)
 
-        flash('Вы успешно зарегистрировались! Теперь войдите в систему.', 'success')
+        flash('Вы успешно зарегистрировались!', 'success')
         return redirect('/rgz/login')
 
     return render_template('rgz/register.html')
+
 
 
 @rgz.route('/rgz/login', methods=['GET', 'POST'])
@@ -105,22 +116,23 @@ def login():
         conn, cur = db_connect()
         try:
             if current_app.config['DB_TYPE'] == 'postgres':
-                cur.execute("SELECT * FROM users WHERE username = %s AND password = %s;", (username, password))
+                cur.execute("SELECT username, password, role FROM users WHERE username = %s;", (username,))
             else:
-                cur.execute("SELECT * FROM users WHERE username = ? AND password = ?;", (username, password))
+                cur.execute("SELECT username, password, role FROM users WHERE username = ?;", (username,))
             user = cur.fetchone()
         finally:
             db_close(conn, cur)
 
-        if user:
-            session['username'] = user[1]  # Предполагается, что username находится в столбце 1
-            session['role'] = user[3]  # Предполагается, что role находится в столбце 3
+        if user and check_password_hash(user[1], password):  # Проверяем хэш пароля
+            session['username'] = user[0]  # Логин пользователя
+            session['role'] = user[2]      # Роль пользователя (admin/user)
             flash('Вы успешно вошли в систему!', 'success')
             return redirect('/rgz')
         else:
             flash('Неверное имя пользователя или пароль.', 'error')
 
     return render_template('rgz/login.html')
+
 
 
 @rgz.route('/rgz/logout')
